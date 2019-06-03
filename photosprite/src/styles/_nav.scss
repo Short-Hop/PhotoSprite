@@ -1,0 +1,127 @@
+.nav {
+    background-color: $Darkblue;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    color: $Deepyellow;
+
+    &__links {
+        display: flex;
+        align-items: center;
+        width: 100vw;
+        justify-content: space-evenly;
+
+        h3 {
+            font-weight: 500;
+            font-size: 5vw;
+        }
+    }
+    img {
+        width: 100vw;
+        display: inline-block;
+    }
+
+    button {
+        background-color: $Darkblue;
+        border: 0px;
+        font-family: PhotoSprite;
+        color: $Deepyellow;
+        padding: 0px;
+        
+
+        img {
+            width: 30vw;
+            vertical-align: bottom;
+        }
+    }
+
+    .logoutButton {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        font-size: 16px;
+        height: 40px;
+        width: 30vw;
+
+        .profilepic {
+            border-radius: 50%;
+            height: 35px;
+            width: 35px;
+            padding: 0px 5px;
+        }
+    }
+}
+
+@media (min-width: 600px) {
+    .nav {
+        height: 80px;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: space-between;
+        color: $Deepyellow;
+
+        &__links {
+            display: flex;
+            align-items: center;
+            width: 73vw;
+            justify-content: space-between;
+
+            h3 {
+                font-weight: 500;
+                font-size: 16px;
+                margin: 0px 10px;
+            }
+        }
+
+        img {
+            width: 160px;
+            float: left;
+        }
+
+        button {
+            margin-left: 20vw;
+            margin-right: 3vw;
+            
+
+            img {
+                width: 150px;
+            }
+        }
+
+        .logoutButton {
+            margin-left: vw;
+            margin-right: 3vw;
+            width: 150px;
+            float: right;
+
+            .profilepic {
+                border-radius: 50%;
+                height: 35px;
+                width: 35px;
+                padding: 0px 5px;
+            }
+        }
+    }
+}
+
+@media (min-width: 1024px) {
+    .nav {
+        &__links {
+            width: 82vw;
+
+            h3 {
+                font-weight: 500;
+                font-size: 16px;
+                margin: 0px 10px;
+            }
+        }
+
+        button {
+            margin-left: 40vw
+        }
+
+        .logoutButton {
+            margin-left: 40vw
+        }
+    }
+}
