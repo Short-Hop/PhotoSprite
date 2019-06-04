@@ -40,10 +40,10 @@ function App() {
     let paletteArray = JSON.stringify(array);
     
     const data = new FormData();
-    data.append("fileInput", event.target.fileInput.files[0])
-    data.append("width", event.target.width.value)
-    data.append("height", event.target.height.value)
-    data.append("paletteArray", paletteArray)
+    data.append("fileInput", event.target.fileInput.files[0]);
+    data.append("width", event.target.width.value);
+    data.append("height", event.target.height.value);
+    data.append("paletteArray", paletteArray);
 
     axios.post("http://localhost:8080/convertImage", data).then(response => {
       if(response.data) {

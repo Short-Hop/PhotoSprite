@@ -7,13 +7,13 @@ import city from "../assets/images/city.jpg";
 import cityp from "../assets/images/city-p.png";
 import rocks from "../assets/images/rocks.jpg";
 import rocksp from "../assets/images/rocks-p.png";
-import { CSSTransition } from 'react-transition-group';
 
 
 
 function Hero() {
     const [counter, setcounter] = useState(0);
-    const [overlay, setoverlay] = useState(<div className="hero__overlay--hidden"></div>)
+    const [overlay, setoverlay] = useState(false);
+
     let imageArray = [
         {
             before: landscape,
@@ -32,53 +32,55 @@ function Hero() {
             after: rocksp
         },
     ]
+    
+    let imageObject
+    imageObject = imageArray[counter % 4]
 
-    useEffect(() => {
-        
+    let blackOverlay;
 
+    if (overlay) {
+        blackOverlay = <div id="blackOverlay" className="hero__overlay--shown"></div>
+    } else {
+        blackOverlay = <div id="blackOverlay" className="hero__overlay--hidden"></div>
+    }
+    
+    if (overlay) {
         setTimeout(()=> {
-            if (overlay === <div className="hero__overlay--shown"></div>) {
-                setoverlay(<div className="hero__overlay--hidden"></div>) 
-            } else {
-                setoverlay(<div className="hero__overlay--shown"></div>)
-            }
             
-            setcounter(counter + 1);
-        }, 5000)
-    })
+            setoverlay(false);
+            
+        }, 2000)
+    } else {
+        setTimeout(()=> {
+            setoverlay(true);
+        }, 8000)
+    }
 
-    let imageObject = imageArray[counter % 4]
+    
+        
+        
+    setTimeout(()=> {
+        setcounter(counter + 1)
+    }, 10000)    
+        
 
     return (
         <>
         <div className ="hero">
             <div className="hero__images">
-
-                {overlay}
-                {/* {imageArray.map((object, index) => {
-                    if (index !== counter % 4) {
-                        return (
-                            <>
-                                <img src={object.before} className="hidden"/>
-                                <img src={object.after} className="hidden"/>
-                            </>
-                        )
-                    } else {
-                        return (
-                            <>
-                                <img src={object.before} className="shown"/>
-                                <img src={object.after} className="shown"/>
-                            </>
-                        )
-                    }
-                })} */}
-
-                <img src={imageObject.before}></img>
-                <img src={imageObject.after}></img>
+                
+                <div className="hero__images--container">
+                    {blackOverlay}
+                    
+                    <img src={imageObject.before}></img>
+                    <img src={imageObject.after}></img>
+                    
+                </div>
+                <div className="hero__title">
+                    <h1>Convert images<br /> into  pixel art</h1>
+                </div>
             </div>
-            <div className="hero__title">
-                <h1>Get Started</h1>
-            </div>
+            <button>Get Started</button>
             
         </div>
 
