@@ -1,0 +1,159 @@
+.uploader {
+    background-color: $Gray;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+        box-sizing: border-box;
+        background-color: $Deepyellow;
+        color: $Darkblue;
+        font-family: PhotoSprite;
+        font-size: 3vw;
+        border-radius: 1vw;
+        padding: 1vw;
+        vertical-align: top;
+        border: solid 1px $Deepyellow;
+        cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+            color: $Deepyellow;
+            background-color: $Darkblue;
+            transition: 0.3s;
+        }
+    }
+
+    input {
+        width: 100%;
+        font-size: 3vw;
+    }
+
+    &__box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background-color: $Darkblue;
+        width: 70vw;
+        min-height: 60vw;
+        border-radius: 3vw;
+        padding: 5vw;
+        margin: 5vw;
+        
+
+        &--image {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            min-height: 5vw;
+
+            img {
+                object-fit: contain;
+                max-width: 60vw;
+                max-height: 30vw;
+                margin: 5vw 0px;
+            }
+        }
+
+        form {
+            min-height: 30vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        &--url {
+            display: flex;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 4vw;
+            margin: 1vw 0px;
+            font-weight: 500;
+        }
+    }
+}
+
+@media (min-width: 600px) {
+    .uploader {
+
+        button {
+            font-size: 2vw;
+        }
+
+        &__box {
+            min-height: 50vw;
+            width: 60vw;
+            padding: 4vw;
+
+            h1 {
+                font-size: 3vw;
+                margin: 1vw 0px;
+                font-weight: 500;
+            }
+
+            input {
+                width: 100%;
+                font-size: 2vw;
+            }
+
+            form {
+                min-height: 25vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            &--image {
+                img {
+                    max-width: 50vw;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 1024px) {
+    .uploader {
+
+        button {
+            font-size: 1vw;
+        }
+
+        &__box {
+            min-height: 35vw;
+            width: 40vw;
+            padding: 3vw;
+
+            h1 {
+                font-size: 2vw;
+                margin: 1vw 0px;
+                font-weight: 500;
+            }
+
+            input {
+                width: 100%;
+                font-size: 1vw;
+            }
+
+            form {
+                min-height: 15vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            &--image {
+                img {
+                    
+                    max-width: 30vw;
+                    // max-height: 20vw;
+                }
+            }
+        }
+    }
+    
+}

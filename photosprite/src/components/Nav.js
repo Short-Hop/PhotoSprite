@@ -9,9 +9,15 @@ function Nav() {
     const [loggedIn, setloggedIn] = useState(0);
     const [profilepic, setprofilepic] = useState("");
 
+    useEffect(()=> {
+        if (localStorage.getItem('token') && localStorage.getItem('userId') && localStorage.getItem('profilepic')) {
+            setloggedIn(1);
+            setprofilepic(localStorage.getItem('profilepic'));
+        }
+    })
 
     const responseGoogle = (GoogleResponse) => {
-        console.log(GoogleResponse);
+        console.log(GoogleResponse.tokenId);
         if (GoogleResponse.profileObj.imageUrl) {
             setprofilepic(GoogleResponse.profileObj.imageUrl)
         }
@@ -20,9 +26,17 @@ function Nav() {
 
             if (response.data === parseInt(GoogleResponse.googleId)) {
                 console.log("will set state")
+                window.localStorage.setItem('token', GoogleResponse.tokenId)
+                window.localStorage.setItem('userId', GoogleResponse.googleId)
+                window.localStorage.setItem('profilepic', GoogleResponse.profileObj.imageUrl)
                 setloggedIn(1);
             }
         })
+    }
+
+    const handleLogout = () => {
+        localStorage.clear();
+        setloggedIn(0)
     }
 
     let loginButton;
@@ -30,14 +44,14 @@ function Nav() {
     if (loggedIn) {
         loginButton = <GoogleLogout
         render={renderProps => (
-            <button className="logoutButton" onClick={renderProps.onClick} disabled={renderProps.disabled}>Logout<img className="profilepic" src={profilepic} /></button>
+                <button className="logoutButton" onClick={renderProps.onClick} disabled={renderProps.disabled}>Logout<img className="profilepic" src={profilepic} alt="logout button" /></button>
         )}
-        buttonText="Logout" onLogoutSuccess={() => setloggedIn(0)}
+        buttonText="Logout" onLogoutSuccess={handleLogout}
         ></GoogleLogout>
     } else {
         loginButton = <GoogleLogin
             render={renderProps => (
-                <button onClick={renderProps.onClick} disabled={renderProps.disabled}><img className="googleButton" src={googleButton}/></button>
+                <button onClick={renderProps.onClick} disabled={renderProps.disabled}><img className="googleButton" src={googleButton} alt="login button"/></button>
             )}
             clientId="417105554681-9dhq2bb9o7cfa864nv2nnk75f2jfbtvi.apps.googleusercontent.com"
             buttonText="Login"
