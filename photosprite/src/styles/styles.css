@@ -8,6 +8,177 @@ body {
   color: #F3C507;
 }
 
+.galleryItem {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.galleryItem__box {
+  -webkit-box-shadow: 0px 0px 10vw 10vw rgba(0, 0, 0, 0.5);
+          box-shadow: 0px 0px 10vw 10vw rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #34495E;
+  width: 80vw;
+  padding: 5vw;
+  border-radius: 1vw;
+}
+
+.galleryItem__box button {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+  background-color: transparent;
+  border: none;
+  font-size: 5vw;
+  padding: 0px;
+  font-family: PhotoSprite;
+  color: #F3C507;
+  font-weight: 100;
+}
+
+.galleryItem__box h1 {
+  margin: 0px;
+  font-weight: 500;
+}
+
+.galleryItem__box--palette {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.galleryItem__box--palette input {
+  padding: 0px 2px;
+  height: 5vw;
+  width: 5vw;
+  font-size: 9vw;
+  font-weight: bold;
+  background-color: #34495E;
+  color: #34495E;
+  border: none;
+  cursor: pointer;
+  margin: .5vw;
+}
+
+.galleryItem__box--images {
+  width: 70vw;
+}
+
+.galleryItem__box--images img {
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: 50%;
+}
+
+.galleryItem__box--download {
+  width: 70vw;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.galleryItem__box--download a {
+  margin-top: 1vw;
+  width: 25%;
+  padding: 1vw;
+  border-radius: 1vw;
+  display: inline-block;
+  background-color: #F3C507;
+  color: #34495E;
+  text-align: center;
+}
+
+.gallery {
+  background-color: #D2D7DF;
+}
+
+.gallery h1 {
+  margin: 0px;
+  padding: 3vw;
+  color: #34495E;
+}
+
+.gallery__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
+.gallery__container--item {
+  background-color: #34495E;
+  border-radius: 1vw;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 300px;
+  height: 300px;
+  margin: 15px;
+  padding: 15px;
+}
+
+.gallery__container--item img {
+  -ms-interpolation-mode: nearest-neighbor;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -o-pixelated;
+      image-rendering: pixelated;
+  -o-object-fit: contain;
+     object-fit: contain;
+  height: 100%;
+  width: 100%;
+}
+
+.gallery__container--item h3 {
+  margin: 1vw 0px 0px 0px;
+}
+
 .converter {
   background-color: #D2D7DF;
   display: -webkit-box;
@@ -151,6 +322,7 @@ body {
 }
 
 .converter__results h1 {
+  font-weight: 500;
   margin: 5vw;
 }
 
@@ -256,7 +428,9 @@ body {
     width: auto;
   }
   .converter__results img {
-    width: auto;
+    -o-object-fit: contain;
+       object-fit: contain;
+    width: 100%;
     max-height: 384px;
     max-width: 384px;
   }

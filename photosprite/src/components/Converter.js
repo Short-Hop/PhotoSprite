@@ -12,14 +12,12 @@ function convertHex(hex, opacity) {
     return result;
 }
 
-
-
 function Converter() {
-    const [imageURL, setimageURL] = useState("");
     const [image, setimage] = useState("")
     const [originalImage, setoriginalImage] = useState("")
     const [colors, setcolors] = useState(["color1"])
 
+    
 
     const handleForm = (event) => {
         event.preventDefault()
@@ -35,23 +33,22 @@ function Converter() {
         const data = {
             width: form.width.value,
             height: form.height.value,
-            paletteArray: paletteArray
+            paletteArray: paletteArray,
+            tempID: localStorage.getItem("tempID")
         }
 
         axios.post("http://localhost:8080/convertImage", data).then(response => {
 
             if (response.data) {
-                let newImage = <img className="newImage" src={"http://localhost:8080/" + response.data[1] + "?" + new Date().getTime()} alt="converted image"></img>;
-                let original = <img className="originalImage" src={"http://localhost:8080/" + response.data[0] + "?" + new Date().getTime()} alt="original image"></img>;
+                let newImage = <img className="newImage" src={"http://localhost:8080/uploads/" + response.data[1] + "?" + new Date().getTime()} alt="converted image"></img>;
+                let original = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data[0] + "?" + new Date().getTime()} alt="original image"></img>;
                 setimage(newImage);
                 setoriginalImage(original)
-                setimageURL("http://localhost:8080/" + response.data[1])
                 console.log(image)
             } else {
                 window.alert("An error has occurred, please try again")
             }
         })
-
     }
 
     function addColor() {
@@ -77,6 +74,35 @@ function Converter() {
             setcolors(current);
         }
     }
+
+    function saveToGallery(event) {
+        event.preventDefault();
+
+        if (localStorage.getItem('token')) {
+
+            let form = document.getElementById("converterForm");
+            let paletteArray = [];
+
+            colors.forEach((item, index) => {
+                paletteArray.push(form.childNodes[0].childNodes[index].value);
+            })
+
+            let savedata = {
+                tempID: localStorage.getItem("tempID"),
+                token: localStorage.getItem("token"),
+                name: event.target.fileName.value,
+                palette: paletteArray
+            }
+
+            axios.post("http://localhost:8080/saveToGallery", savedata).then(response => {
+                window.alert(response.data);
+            })
+
+        } else {
+            window.alert("You must be logged in to save to gallery")
+        }
+    }
+
     return (
         <>
         <Uploader setoriginalImage={setoriginalImage}/>
@@ -102,9 +128,9 @@ function Converter() {
                 </form>
                 
             </div>
-            <form className="converter__results">
+            <form className="converter__results" onSubmit={saveToGallery}>
                 <h1>Result</h1>
-                Name:<input type="text"></input>
+                Name:<input name="fileName" type="text" defaultValue='My Sprite'></input>
                 {image}
 
                 <button>Save to Gallery</button>

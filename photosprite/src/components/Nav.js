@@ -35,8 +35,10 @@ function Nav() {
     }
 
     const handleLogout = () => {
-        localStorage.clear();
-        setloggedIn(0)
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId")
+        localStorage.removeItem("profilepic")
+        setloggedIn(0);
     }
 
     let loginButton;

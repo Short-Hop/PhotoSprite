@@ -9,9 +9,11 @@ var Jimp = require('jimp');
 var PNGImage = require("pngjs-image")
 const fs = require('fs')
 const download = require('image-downloader')
-
 var currentFileName = "fileInput";
 var extension = ".png";
+let tempID = 0;
+
+let allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"))
 
 
 var storage = multer.diskStorage({
@@ -20,22 +22,13 @@ var storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         console.log((file.mimetype));
-        
-
-        if(file.mimetype.includes("jpeg")) {
-            extension = ".jpg"
-            currentFileName = file.fieldname;
-            cb(null, currentFileName + extension)
-            
-        } else {
-            extension = ".png"
-            currentFileName = file.fieldname;
-            cb(null, currentFileName + extension)
-        }
+        extension = ".jpg"
+        currentFileName = file.fieldname + tempID;
+        cb(null, currentFileName + ".png")
     }
 })
 
-var upload = multer({ storage: storage }).single("fileInput");
+var upload = multer({ storage: storage }).single('fileInput');
 
 app.use(cors());
 
@@ -55,14 +48,30 @@ async function verify(tokenId) {
     return(userid);
 }
 
-app.get("/:id", (req, res) => {
+app.get("/uploads/:id", (req, res) => {
+    console.log(req.params.id)
     if (fs.existsSync("D:/Documents/Brainstation/Capstone/uploads/" + req.params.id)) {
         console.log("Gave image file")
         res.sendFile("D:/Documents/Brainstation/Capstone/uploads/" + req.params.id)
     } else {
-        res.statusCode(404)
+        res.sendStatus(404)
     }
-    
+})
+
+app.get("/gallery/:id/:token", (req, res) => {
+
+    verify(req.params.token).then(response => {
+
+        if (fs.existsSync("D:/Documents/Brainstation/Capstone/users/" + response + "/" + req.params.id)) {
+            console.log("Gave image file")
+            res.sendFile("D:/Documents/Brainstation/Capstone/users/" + response + "/" + req.params.id)
+        } else {
+            res.sendStatus(404)
+        }
+    }).catch(error => {
+        console.log(error)
+        res.sendStatus(403)
+    })
 })
 
 app.post("/signin", (req, res) =>{   
@@ -71,11 +80,25 @@ app.post("/signin", (req, res) =>{
     }).catch(error => {
         res.sendStatus(403)
     });
+
+
+})
+
+app.post("/tempID", (req, res) => {
+
+    console.log(req.body.tempID);
+    if (req.body.tempID) {
+        tempID = req.body.tempID;
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(400);
+    }
+    
 })
 
 app.post("/upload", (req, res) => {
 
-    upload(req, res, function (err) {
+    upload(req, res, function (err) {  
 
         if (err instanceof multer.MulterError) {
             return res.status(500).json(err)
@@ -85,20 +108,20 @@ app.post("/upload", (req, res) => {
 
         if (req.body.fileInput) {
 
+
             let options = {
                 url: req.body.fileInput,
-                dest: "./uploads/fileInput.png",
+                dest: `./uploads/fileInput${tempID}.png`,
             }
 
             download.image(options).then(() => {
-                res.send("fileInput.png");
+                res.send(`fileInput${tempID}.png`);
             }).catch(()=> {
-                res.statusCode(403);
+                res.statusCode(400);
             })
         } else {
-            res.send("fileInput" + extension);
+            res.send("fileInput" + tempID + ".png");
         }
-
     })
 })
 
@@ -106,13 +129,13 @@ app.post("/upload", (req, res) => {
 app.post('/convertImage', (req, res) => {
     let paletteArray = req.body.paletteArray;
 
-    Jimp.read("./uploads/" + currentFileName + extension).then(image => {
+    Jimp.read("./uploads/fileInput" + req.body.tempID + ".png").then(image => {
         return image
             .resize(parseInt(req.body.width), parseInt(req.body.height), Jimp.RESIZE_NEAREST_NEIGHBOR) // resize
-            .write("./uploads/" + currentFileName + "-converted" + ".png"); // save
+            .write("./uploads/fileInput" + req.body.tempID + "-converted" + ".png"); // save
     }).then(()=> {
 
-        getPixels("./uploads/" + currentFileName + "-converted" + ".png", function (err, pixels) {
+        getPixels("./uploads/fileInput" + req.body.tempID + "-converted" + ".png", function (err, pixels) {
             if (err) {
                 console.log("Error getting pixels")
                 res.sendStatus(500)
@@ -147,10 +170,10 @@ app.post('/convertImage', (req, res) => {
                 }
             }
 
-            finalImage.writeImage("./uploads/" + currentFileName + "-converted" + ".png", (err) => {
+            finalImage.writeImage("./uploads/fileInput" + req.body.tempID + "-converted" + ".png", (err) => {
                 if (err) throw err;
                 console.log("File written");
-                let files = [currentFileName + extension, currentFileName + "-converted" + ".png"]
+                let files = ['fileInput' + req.body.tempID + ".png", 'fileInput' + req.body.tempID + "-converted" + ".png"]
 
                 return res.send(files);
 
@@ -159,11 +182,98 @@ app.post('/convertImage', (req, res) => {
 
         })
     })
+})
+
+app.post("/saveToGallery", (req, res) => {
+
+    verify(req.body.token).then(response => {
         
-        
+        console.log(response);
+        if(fs.existsSync("./users/" + response)) {
+            if (fs.existsSync("./users/" + response + "/" + req.body.name + "-p.png")) {
+                return res.send("A conversion with that name already exists");
+            } else {
+                fs.renameSync("./uploads/fileInput" + req.body.tempID + ".png", "./users/" + response + "/" + req.body.name + ".png");
+                fs.renameSync("./uploads/fileInput" + req.body.tempID + "-converted.png", "./users/" + response + "/" + req.body.name + "-p.png");
+                res.send("File Saved")
+            }
+        } else {
+            fs.mkdirSync("./users/" + response + "/");
+            fs.renameSync("./uploads/fileInput" + req.body.tempID + ".png", "./users/" + response + "/" + req.body.name + ".png");
+            fs.renameSync("./uploads/fileInput" + req.body.tempID + "-converted.png", "./users/" + response + "/" + req.body.name + "-p.png");
+            res.send("File Saved")
+        }
+
+
+        let userIndex = -1
+        allUsers.forEach((user, index) => {
+            if(user.userId == response) {
+                userIndex = index;
+            }
+        })
+
+        if (userIndex > -1) {
+            let user = allUsers[userIndex];
+
+            let conversion = {
+                name: req.body.name,
+                original: req.body.name + ".png",
+                converted: req.body.name + "-p.png",
+                palette: req.body.palette,
+            }
+
+            user.conversions.push(conversion);
+
+            allUsers[userIndex] = user;
+
+        } else {
+
+            let user = {
+                userId: response,
+                conversions: [
+                    {
+                        name: req.body.name,
+                        original: req.body.name + ".png",
+                        converted: req.body.name + "-p.png",
+                        palette: req.body.palette
+                    }
+                ]
+            }
+
+            allUsers.push(user);
+        }
+
+        fs.writeFileSync("./users.json", JSON.stringify(allUsers));
+
+    }).catch(error => {
+        console.log(error)
+        res.sendStatus(403)
+    });
+
+})
+
+app.get("/gallery/:token", (req, res) => {
+    verify(req.params.token).then(response => {
+
+        console.log(response)
+        let found = allUsers.find(user => user.userId === response)
+        if (found) {
+            res.send(found);
+        } else {
+            res.sendStatus(404);
+        }
+    }).catch(error => {
+        console.log(error)
+        res.sendStatus(403)
+    })
 })
 
 
 app.listen(8080, () => {
     console.log("Listening on 8080. . .")
 })
+
+user = {
+    userId: ""
+
+}

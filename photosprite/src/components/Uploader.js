@@ -4,8 +4,6 @@ import axios from "axios";
 function Uploader(props) {
     const [image, setimage] = useState("")
 
-    
-
     const handleForm = (event) => {
         event.preventDefault()
 
@@ -13,24 +11,26 @@ function Uploader(props) {
 
         const data = new FormData();
 
-
         if (form.fileInput.files[0]) {
             data.append("fileInput", form.fileInput.files[0]);
         } else {
             data.append("fileInput", form.fileInput2.value)
         }
 
-        if (data === new FormData()) {
-            console.log("big oof")
+        let idData = {
+            tempID: localStorage.getItem("tempID")
         }
-        
-        axios.post("http://localhost:8080/upload", data).then(response => {
-            console.log(response.data);
-            let uploadedImage = <img className="originalImage" src={"http://localhost:8080/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
-            setimage(uploadedImage);
-            props.setoriginalImage(uploadedImage);
+
+        axios.post("http://localhost:8080/tempID", idData).then(respones => {
+            axios.post("http://localhost:8080/upload", data).then(response => {
+                console.log(response.data);
+                let uploadedImage = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
+                setimage(uploadedImage);
+                props.setoriginalImage(uploadedImage);
+            })
         })
 
+        
     }
     return (
         <div className="uploader">
