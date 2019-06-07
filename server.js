@@ -1,19 +1,22 @@
-const express = require('express')
-const app = express()
-var cors = require('cors')
+const express = require('express');
+const app = express();
+var cors = require('cors');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client("417105554681-9dhq2bb9o7cfa864nv2nnk75f2jfbtvi.apps.googleusercontent.com");
 var getPixels = require("get-pixels");
-var multer = require('multer')
+var multer = require('multer');
 var Jimp = require('jimp');
-var PNGImage = require("pngjs-image")
-const fs = require('fs')
-const download = require('image-downloader')
+var PNGImage = require("pngjs-image");
+const fs = require('fs');
+const download = require('image-downloader');
 var currentFileName = "fileInput";
 var extension = ".png";
 let tempID = 0;
+const jwt = require("jsonwebtoken");
 
-let allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"))
+let allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
+var privateKEY = fs.readFileSync('./private.key', 'utf8');
+var publicKEY = fs.readFileSync('./public.key', 'utf8');
 
 
 var storage = multer.diskStorage({
@@ -44,8 +47,19 @@ async function verify(tokenId) {
     });
     const payload = ticket.getPayload();
     const userid = payload['sub'];
-
     return(userid);
+}
+
+async function getUser(tokenId) {
+
+    var verifyOptions = {
+        issuer: "PhotoSprite",
+        algorithm: ["RS256"]
+    };
+
+    var userInfo = jwt.verify(tokenId, publicKEY, verifyOptions)
+        
+    return userInfo.userId;
 }
 
 app.get("/uploads/:id", (req, res) => {
@@ -60,11 +74,11 @@ app.get("/uploads/:id", (req, res) => {
 
 app.get("/gallery/:id/:token", (req, res) => {
 
-    verify(req.params.token).then(response => {
+    getUser(req.params.token).then(userId => {
 
-        if (fs.existsSync("D:/Documents/Brainstation/Capstone/users/" + response + "/" + req.params.id)) {
+        if (fs.existsSync("D:/Documents/Brainstation/Capstone/users/" + userId + "/" + req.params.id)) {
             console.log("Gave image file")
-            res.sendFile("D:/Documents/Brainstation/Capstone/users/" + response + "/" + req.params.id)
+            res.sendFile("D:/Documents/Brainstation/Capstone/users/" + userId + "/" + req.params.id)
         } else {
             res.sendStatus(404)
         }
@@ -76,12 +90,26 @@ app.get("/gallery/:id/:token", (req, res) => {
 
 app.post("/signin", (req, res) =>{   
     verify(req.body.tokenId).then(response => {
-        res.send(response);
+
+        let payload = {
+            userId: response
+        }
+
+        var signOptions = {
+            issuer: "PhotoSprite",
+            algorithm: "RS256"
+        };
+
+        let userData = {
+            googleId: response,
+            token: jwt.sign(payload, privateKEY, signOptions)
+        }
+
+        res.send(userData);
     }).catch(error => {
+        console.log(error);
         res.sendStatus(403)
     });
-
-
 })
 
 app.post("/tempID", (req, res) => {
@@ -124,7 +152,6 @@ app.post("/upload", (req, res) => {
         }
     })
 })
-
 
 app.post('/convertImage', (req, res) => {
     let paletteArray = req.body.paletteArray;
@@ -186,28 +213,28 @@ app.post('/convertImage', (req, res) => {
 
 app.post("/saveToGallery", (req, res) => {
 
-    verify(req.body.token).then(response => {
+    getUser(req.headers.token).then(userId => {
         
-        console.log(response);
-        if(fs.existsSync("./users/" + response)) {
-            if (fs.existsSync("./users/" + response + "/" + req.body.name + "-p.png")) {
+        console.log(userId);
+        if (fs.existsSync("./users/" + userId)) {
+            if (fs.existsSync("./users/" + userId + "/" + req.body.name + "-p.png")) {
                 return res.send("A conversion with that name already exists");
             } else {
-                fs.renameSync("./uploads/fileInput" + req.body.tempID + ".png", "./users/" + response + "/" + req.body.name + ".png");
-                fs.renameSync("./uploads/fileInput" + req.body.tempID + "-converted.png", "./users/" + response + "/" + req.body.name + "-p.png");
+                fs.renameSync("./uploads/fileInput" + req.body.tempID + ".png", "./users/" + userId + "/" + req.body.name + ".png");
+                fs.renameSync("./uploads/fileInput" + req.body.tempID + "-converted.png", "./users/" + userId + "/" + req.body.name + "-p.png");
                 res.send("File Saved")
             }
         } else {
-            fs.mkdirSync("./users/" + response + "/");
-            fs.renameSync("./uploads/fileInput" + req.body.tempID + ".png", "./users/" + response + "/" + req.body.name + ".png");
-            fs.renameSync("./uploads/fileInput" + req.body.tempID + "-converted.png", "./users/" + response + "/" + req.body.name + "-p.png");
+            fs.mkdirSync("./users/" + userId + "/");
+            fs.renameSync("./uploads/fileInput" + req.body.tempID + ".png", "./users/" + userId + "/" + req.body.name + ".png");
+            fs.renameSync("./uploads/fileInput" + req.body.tempID + "-converted.png", "./users/" + userId + "/" + req.body.name + "-p.png");
             res.send("File Saved")
         }
 
 
         let userIndex = -1
         allUsers.forEach((user, index) => {
-            if(user.userId == response) {
+            if (user.userId == userId) {
                 userIndex = index;
             }
         })
@@ -229,7 +256,7 @@ app.post("/saveToGallery", (req, res) => {
         } else {
 
             let user = {
-                userId: response,
+                userId: userId,
                 conversions: [
                     {
                         name: req.body.name,
@@ -252,11 +279,11 @@ app.post("/saveToGallery", (req, res) => {
 
 })
 
-app.get("/gallery/:token", (req, res) => {
-    verify(req.params.token).then(response => {
+app.get("/gallery/", (req, res) => {
+    getUser(req.headers.token).then(userId => {
 
-        console.log(response)
-        let found = allUsers.find(user => user.userId === response)
+        console.log(userId)
+        let found = allUsers.find(user => user.userId === userId)
         if (found) {
             res.send(found);
         } else {

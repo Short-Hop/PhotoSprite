@@ -7,7 +7,8 @@ import city from "../assets/images/city.jpg";
 import cityp from "../assets/images/city-p.png";
 import rocks from "../assets/images/rocks.jpg";
 import rocksp from "../assets/images/rocks-p.png";
-
+import { Link } from "react-router-dom"
+import Nav from "./Nav";
 
 
 function Hero() {
@@ -49,11 +50,11 @@ function Hero() {
             
             setoverlay(false);
             
-        }, 2000)
+        }, 3000)
     } else {
         setTimeout(()=> {
             setoverlay(true);
-        }, 8000)
+        }, 7000)
     }
 
     
@@ -66,24 +67,25 @@ function Hero() {
 
     return (
         <>
-        <div className ="hero">
-            <div className="hero__images">
-                
-                <div className="hero__images--container">
-                    {blackOverlay}
+            <Nav />
+            <div className ="hero">
+                <div className="hero__images">
                     
-                    <img src={imageObject.before}></img>
-                    <img src={imageObject.after}></img>
-                    
+                    <div className="hero__images--container">
+                        {blackOverlay}
+                        
+                        <img src={imageObject.before}></img>
+                        <img src={imageObject.after}></img>
+                        
+                    </div>
+                    <div className="hero__title">
+                        <h1>Convert images<br /> into  pixel art</h1>
+                    </div>
                 </div>
-                <div className="hero__title">
-                    <h1>Convert images<br /> into  pixel art</h1>
-                </div>
+                <Link to="/convert">
+                    <button>Get Started</button>
+                </Link>
             </div>
-            <button>Get Started</button>
-            
-        </div>
-
         </>
     )
 }

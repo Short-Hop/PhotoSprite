@@ -1,4 +1,5 @@
 .converter {
+    box-shadow: 5px 0px 10px 10px rgba(0, 0, 0, 0.1);
     background-color: $Gray;
 
     display: flex;
@@ -11,13 +12,34 @@
 
     &__options {
         color: $Darkblue;
-
         display: flex;
         flex-direction: column;
         align-items: center;
 
         img {
             width: 80vw;
+        }
+
+        button {
+            background-color: $Darkblue;
+            box-sizing: border-box;
+            color: $Deepyellow;
+            font-family: PhotoSprite;
+            font-size: 3vw;
+            border-radius: 1vw;
+            border: none;
+            padding: 2vw;
+            vertical-align: top;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 22vw;
+            margin: 2vw;
+
+            &:hover {
+                color: $Darkblue;
+                background-color: $Deepyellow;
+                transition: 0.3s;
+            }
         }
 
         form {
@@ -57,38 +79,32 @@
                 }
             }
 
-
-            button {
-                background-color: $Darkblue;
-                box-sizing: border-box;
-                color: $Deepyellow;
-                font-family: PhotoSprite;
-                font-size: 3vw;
-                border-radius: 1vw;
-                border: none;
-                padding: 2vw;
-                vertical-align: top;
-                cursor: pointer;
-                transition: 0.3s;
-                width: 20vw;
-                margin: 2vw;
-
-                &:hover {
-                    color: $Darkblue;
-                    background-color: $Deepyellow;
-                    transition: 0.3s;
-                }
-            }
-
             .converter__options--size {
                 display: flex;
+                align-items: center;
                 justify-content: space-between;
                 width: 60vw;
                 font-size: 4vw;
 
                 input {
                     width: 10vw;
-                } 
+                }
+            }
+
+            .converter__options--ratio {
+                margin: 1vw;
+                font-size: 4vw;
+            }
+
+            .converter__options--hex {
+                display: flex;
+                align-items: center;
+                margin: 1vw;
+                font-size: 4vw;
+
+                textarea {
+                    width: 60vw;
+                }
             }
         }
     }
@@ -118,7 +134,7 @@
             font-family: PhotoSprite;
             font-size: 3vw;
             border-radius: 1vw;
-            padding: 1vw;
+            padding: 2vw;
             vertical-align: top;
             border: solid 1px $Deepyellow;
             cursor: pointer;
@@ -131,6 +147,10 @@
                 transition: 0.3s;
             }
         }
+
+        input {
+            margin-bottom: 5vw;
+        }
     }
 
     
@@ -138,6 +158,7 @@
 
 @media (min-width: 600px) {
     .converter {
+        
 
         h1 {
             margin: 0px;
@@ -158,6 +179,23 @@
                     font-size: 3vw;
                     width: 50vw;
                 }
+
+                .converter__options--ratio {
+                    margin: 1vw;
+                    font-size: 3vw;
+                }
+
+                .converter__options--hex {
+                display: flex;
+                align-items: center;
+                margin: 1vw;
+                font-size: 3vw;
+
+                    textarea {
+                        width: 60vw;
+                        height: 5vw;
+                    }
+                }
             }
         }
 
@@ -167,6 +205,7 @@
 
 @media (min-width: 1024px) {
     .converter {
+        min-height: 100vh;
         flex-direction: row;
 
         h1 {
@@ -178,14 +217,24 @@
             width: 50vw;
 
             img {
-                max-height: 384px;
+                max-height: 65vh;
                 max-width: 384px;
                 width: auto;
+                margin-top: 1vw;
             }
+
+            button {
+                font-size: 1.5vw;
+                padding: 1vw;
+                width: auto;
+                margin: 0px 20px;
+            }
+
             form {
-                flex-direction: row;
-                justify-content: space-between;
+                flex-flow: row wrap;
+                justify-content: center;
                 width: 50vw;
+                margin-bottom: 1vw;
 
                 .converter__options--palette {
                     margin: 20px;
@@ -206,23 +255,28 @@
                     input {
                         width: 50px;
                     }
-
-                    
+                }
+                .converter__options--ratio {
+                    margin: 1vw;
+                    font-size: 1.5vw;
                 }
                 
-                button {
-                    font-size: 1.5vw;
-                    padding: 1vw;
-                    width: auto;
+                .converter__options--hex {
+                display: flex;
+                align-items: center;
+                margin: 1vw;
+                font-size: 1.5vw;
+
+                    textarea {
+                        width: 30vw;
+                        height: 3vw;
+                    }
+
                 }
             }
         }
 
         &__results {
-
-            h1 {
-                
-            }
 
             img {
                 object-fit: contain;
@@ -232,7 +286,9 @@
             }
 
             button {
-                font-size: 1vw;
+                font-size: 1.5vw;
+                padding: 1vw;
+                width: auto;
 
                 &:hover {
 

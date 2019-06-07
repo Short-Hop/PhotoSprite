@@ -4,40 +4,45 @@ import { GoogleLogout } from 'react-google-login';
 import logo from "../assets/logo.png";
 import googleButton from "../assets/btn_google_signin_dark_pressed_web@2x.png"
 import axios from "axios"
+import { Link } from "react-router-dom"
 
 function Nav() {
     const [loggedIn, setloggedIn] = useState(0);
     const [profilepic, setprofilepic] = useState("");
 
     useEffect(()=> {
-        if (localStorage.getItem('token') && localStorage.getItem('userId') && localStorage.getItem('profilepic')) {
+        if (localStorage.getItem('token') && localStorage.getItem('profilepic')) {
             setloggedIn(1);
             setprofilepic(localStorage.getItem('profilepic'));
         }
     })
 
     const responseGoogle = (GoogleResponse) => {
-        console.log(GoogleResponse.tokenId);
+        console.log(GoogleResponse);
         if (GoogleResponse.profileObj.imageUrl) {
             setprofilepic(GoogleResponse.profileObj.imageUrl)
         }
 
         axios.post("http://localhost:8080/signin", GoogleResponse).then(response => {
+            console.log(response.data);
 
-            if (response.data === parseInt(GoogleResponse.googleId)) {
-                console.log("will set state")
-                window.localStorage.setItem('token', GoogleResponse.tokenId)
-                window.localStorage.setItem('userId', GoogleResponse.googleId)
-                window.localStorage.setItem('profilepic', GoogleResponse.profileObj.imageUrl)
+            if (response.data.googleId === GoogleResponse.googleId) {
+                console.log(response.data.token)
+                console.log("will set localstorage")
+                localStorage.setItem('token', response.data.token)
+                localStorage.setItem('profilepic', GoogleResponse.profileObj.imageUrl)
                 setloggedIn(1);
+
+                // axios.get("http://localhost:8080/verify", { headers: { token: localStorage.getItem('token')}}).then( response=> {
+                //     console.log(response)
+                // })
             }
         })
     }
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        localStorage.removeItem("userId")
-        localStorage.removeItem("profilepic")
+        localStorage.removeItem("profilepic");
         setloggedIn(0);
     }
 
@@ -65,11 +70,17 @@ function Nav() {
 
     return(
         <div className="nav">
-            <img src={logo}></img>
+            <Link className="link" to="/home">
+                <img src={logo}></img>
+            </Link>
+            
             <div className="nav__links">
-                
-                <h3>Convert</h3>
-                <h3>Gallery</h3>
+                <Link className="link" to="/convert">
+                    <h3>Convert</h3>
+                </Link>
+                <Link className="link" to="/gallery">
+                    <h3>Gallery</h3>
+                </Link>
                 { loginButton }
             </div>
             

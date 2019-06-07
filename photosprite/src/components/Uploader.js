@@ -25,6 +25,24 @@ function Uploader(props) {
             axios.post("http://localhost:8080/upload", data).then(response => {
                 console.log(response.data);
                 let uploadedImage = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
+
+
+                let img = new Image();
+                img.onload = function () {
+                    let height = img.height;
+                    let width = img.width;
+                    let newDimensions = {
+                        width: width,
+                        height: height,
+                        ratio: width / height
+                    }
+
+                    console.log(newDimensions);
+
+                    props.setdimensions(newDimensions);
+                }
+                img.src = "http://localhost:8080/uploads/" + response.data + "?" + new Date().getTime();
+
                 setimage(uploadedImage);
                 props.setoriginalImage(uploadedImage);
             })
@@ -46,11 +64,12 @@ function Uploader(props) {
                     </div>
                     
                 </form>
+                {image}
                 <div className="uploader__box--image">
-                    {image}
+                    
                 </div>
                 
-                <button>Begin</button>
+                <button onClick={() => props.setuploader("")}>Begin</button>
             </div>
         </div>
     )

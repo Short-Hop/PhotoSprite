@@ -1,9 +1,12 @@
 .uploader {
-    background-color: $Gray;
+    position: fixed;
+    top: 5vh;
+    width: 100vw;
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 
     button {
         box-sizing: border-box;
@@ -31,6 +34,7 @@
     }
 
     &__box {
+        box-shadow: 0px 0px 100px 100px rgba(0, 0, 0, 0.5);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -38,24 +42,19 @@
         background-color: $Darkblue;
         width: 70vw;
         min-height: 60vw;
+        max-height: 90vh;
         border-radius: 3vw;
         padding: 5vw;
-        margin: 5vw;
+        // overflow: scroll;
         
 
-        &--image {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            min-height: 5vw;
 
-            img {
-                object-fit: contain;
-                max-width: 60vw;
-                max-height: 30vw;
-                margin: 5vw 0px;
-            }
+        img {
+            margin: 3vw 0px;
+            display: flex;
+            object-fit: contain;
+            max-height: 35vh;
+            max-width: 100%;
         }
 
         form {
@@ -82,37 +81,39 @@
     .uploader {
 
         button {
-            font-size: 2vw;
+            font-size: 16px;
+            padding: 8px;
         }
 
         &__box {
             min-height: 50vw;
             width: 60vw;
-            padding: 4vw;
+            padding: 30px;
 
             h1 {
-                font-size: 3vw;
-                margin: 1vw 0px;
-                font-weight: 500;
+                font-size: 24px;
+                margin: 8px 0px;
             }
 
             input {
                 width: 100%;
-                font-size: 2vw;
+                font-size: 16px;
             }
 
             form {
-                min-height: 25vw;
+                min-height: 150px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
             }
 
-            &--image {
-                img {
-                    max-width: 50vw;
-                }
+
+            img {
+                max-width: 50vw;
+                max-height: 40vh;
+                margin: 24px 0px;
             }
+    
         }
     }
 }
@@ -121,39 +122,40 @@
     .uploader {
 
         button {
-            font-size: 1vw;
+            font-size: 16px;
+            padding: 8px;
         }
 
         &__box {
-            min-height: 35vw;
+            min-height: 30vw;
             width: 40vw;
-            padding: 3vw;
+            padding: 30px;
 
             h1 {
-                font-size: 2vw;
-                margin: 1vw 0px;
-                font-weight: 500;
+                font-size: 24px;
+                margin: 8px 0px;
             }
 
             input {
                 width: 100%;
-                font-size: 1vw;
+                font-size: 16px;
             }
 
             form {
-                min-height: 15vw;
+                min-height: 150px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
             }
-            &--image {
-                img {
-                    
-                    max-width: 30vw;
-                    // max-height: 20vw;
-                }
+
+
+            img {
+                max-width: 50vw;
+                max-height: 40vh;
+                margin: 24px 0px;
             }
+    
         }
     }
-    
 }
+    

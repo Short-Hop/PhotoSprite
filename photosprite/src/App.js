@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './styles/styles.css';
 import axios from "axios";
-import HomePage from "./components/HomePage";
-import ConverterPage from "./components/ConverterPage";
-import GalleryPage from './components/GalleryPage';
+import Hero from "./components/Hero";
+import Converter from "./components/Converter";
+import Gallery from './components/Gallery';
+import { BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 
 
 function App() {
@@ -13,11 +14,15 @@ function App() {
   console.log(localStorage.getItem("tempID"));
 
   return (
-    <div>
-      {/* <ConverterPage/> */}
-      <GalleryPage/>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Redirect from="/" exact to="/home"></Redirect>
+        <Route path="/home" component ={Hero}/>
+        <Route path="/convert" component={Converter}/>
+        <Route path="/gallery" component={Gallery}/>
+      </Switch>
     
+    </BrowserRouter>
   );
 }
 
