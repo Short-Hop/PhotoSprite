@@ -6,7 +6,7 @@ import googleButton from "../assets/btn_google_signin_dark_pressed_web@2x.png"
 import axios from "axios"
 import { Link } from "react-router-dom"
 
-function Nav() {
+function Nav(props) {
     const [loggedIn, setloggedIn] = useState(0);
     const [profilepic, setprofilepic] = useState("");
 
@@ -15,27 +15,21 @@ function Nav() {
             setloggedIn(1);
             setprofilepic(localStorage.getItem('profilepic'));
         }
-    })
+    }, [])
 
     const responseGoogle = (GoogleResponse) => {
-        console.log(GoogleResponse);
         if (GoogleResponse.profileObj.imageUrl) {
             setprofilepic(GoogleResponse.profileObj.imageUrl)
         }
 
         axios.post("http://localhost:8080/signin", GoogleResponse).then(response => {
-            console.log(response.data);
 
             if (response.data.googleId === GoogleResponse.googleId) {
-                console.log(response.data.token)
-                console.log("will set localstorage")
+
                 localStorage.setItem('token', response.data.token)
                 localStorage.setItem('profilepic', GoogleResponse.profileObj.imageUrl)
                 setloggedIn(1);
-
-                // axios.get("http://localhost:8080/verify", { headers: { token: localStorage.getItem('token')}}).then( response=> {
-                //     console.log(response)
-                // })
+                window.location.reload();
             }
         })
     }
@@ -44,6 +38,7 @@ function Nav() {
         localStorage.removeItem("token");
         localStorage.removeItem("profilepic");
         setloggedIn(0);
+        window.location.reload();
     }
 
     let loginButton;
@@ -68,22 +63,29 @@ function Nav() {
         />
     }
 
+    let convertTitle = <h3>Convert</h3>
+    let galleryTitle = <h3>Gallery</h3>
+    if (props.match.path.includes("convert")) {
+        convertTitle = <h3 className="selected">Convert</h3>
+    } else if (props.match.path.includes("gallery")) {
+        galleryTitle = <h3 className="selected">Gallery</h3>
+    }
+
     return(
         <div className="nav">
             <Link className="link" to="/home">
-                <img src={logo}></img>
+                <img src={logo} alt="logo"></img>
             </Link>
             
             <div className="nav__links">
                 <Link className="link" to="/convert">
-                    <h3>Convert</h3>
+                    {convertTitle}
                 </Link>
                 <Link className="link" to="/gallery">
-                    <h3>Gallery</h3>
+                    {galleryTitle}
                 </Link>
                 { loginButton }
             </div>
-            
             
         </div>
         

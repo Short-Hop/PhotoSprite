@@ -11,7 +11,7 @@ import { Link } from "react-router-dom"
 import Nav from "./Nav";
 
 
-function Hero() {
+function Hero(props) {
     const [counter, setcounter] = useState(0);
     const [overlay, setoverlay] = useState(false);
 
@@ -67,15 +67,15 @@ function Hero() {
 
     return (
         <>
-            <Nav />
+            <Nav match={props.match} />
             <div className ="hero">
                 <div className="hero__images">
                     
                     <div className="hero__images--container">
                         {blackOverlay}
                         
-                        <img src={imageObject.before}></img>
-                        <img src={imageObject.after}></img>
+                        <img src={imageObject.before} alt="before"></img>
+                        <img src={imageObject.after} alt="after"></img>
                         
                     </div>
                     <div className="hero__title">

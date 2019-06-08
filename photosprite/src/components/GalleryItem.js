@@ -1,18 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import sample from "../assets/images/city.jpg";
-import sample2 from "../assets/images/city-p.png";
-import xbutton from "../assets/baseline-close-24px.svg"
-
-let palette=[ "#466546", "#6426F3", "#000000"]
+import React from 'react';
+import axios from 'axios';
 
 function GalleryItem(props) {
 
     console.log(props.conversion);
 
+    function deleteItem() {
+        if(window.confirm("Are you sure you want to delete this conversion from your gallery?")) {
+            axios.delete("http://localhost:8080/gallery/" + props.conversion.name, { headers: { token: localStorage.getItem('token') } }).then(response => {
+                
+                props.setsingleItem("");
+                window.location.reload();
+            })
+        }
+    }
+
     return (
         <div className="galleryItem">
             <div className="galleryItem__box">
-                <button onClick ={props.hideItem}>x</button>
+                <div className="galleryItem__box--delete">
+                    <button onClick={deleteItem} className="delete">delete</button>
+                    <button onClick={() => props.setsingleItem("")}>x</button>
+                </div>
+                
                 <h1>{props.conversion.name}</h1>
                 <div className="galleryItem__box--palette">
                     palette: {props.conversion.palette.map((color, index) => 
@@ -21,8 +31,8 @@ function GalleryItem(props) {
                 </div>
                 
                 <div className="galleryItem__box--images">
-                    <img src={'http://localhost:8080/gallery/' + props.conversion.original + '/' + localStorage.getItem('token')}></img>
-                    <img src={'http://localhost:8080/gallery/' + props.conversion.converted + '/' + localStorage.getItem('token')}></img>
+                    <img alt="original" src={'http://localhost:8080/gallery/' + props.conversion.original + '/' + localStorage.getItem('token')}></img>
+                    <img alt="converted" src={'http://localhost:8080/gallery/' + props.conversion.converted + '/' + localStorage.getItem('token')}></img>
                 </div>
 
                 <div className="galleryItem__box--download">

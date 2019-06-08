@@ -13,6 +13,110 @@ body {
   color: #F3C507;
 }
 
+.takephoto {
+  position: fixed;
+  top: 5vh;
+  width: 100vw;
+  background-color: transparent;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.takephoto__box {
+  -webkit-box-shadow: 0px 0px 100px 100px rgba(0, 0, 0, 0.5);
+          box-shadow: 0px 0px 100px 100px rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  background-color: #34495E;
+  width: 70vw;
+  max-height: 90vh;
+  border-radius: 3vw;
+  padding: 5vw;
+}
+
+.takephoto__box video {
+  margin-bottom: 3vw;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -o-object-fit: contain;
+     object-fit: contain;
+  max-height: 60vh;
+  max-width: 100%;
+}
+
+.takephoto__box button {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  background-color: #F3C507;
+  color: #34495E;
+  font-family: PhotoSprite;
+  font-size: 3vw;
+  border-radius: 1vw;
+  padding: 1vw;
+  vertical-align: top;
+  border: solid 1px #F3C507;
+  cursor: pointer;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.takephoto__box button:hover {
+  color: #F3C507;
+  background-color: #34495E;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+@media (min-width: 600px) {
+  .takephoto__box {
+    width: 60vw;
+    padding: 30px;
+  }
+  .takephoto__box video {
+    max-width: 100%;
+    max-height: 60vh;
+    margin-bottom: 24px;
+  }
+  .takephoto__box button {
+    font-size: 16px;
+    padding: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .takephoto__box {
+    width: 60vw;
+    padding: 30px;
+  }
+  .takephoto__box video {
+    max-width: 100%;
+    max-height: 66vh;
+    margin-bottom: 24px;
+  }
+}
+
 .galleryItem {
   position: fixed;
   top: 5vw;
@@ -70,6 +174,26 @@ body {
   margin: 0px;
   font-size: 5vw;
   font-weight: 500;
+}
+
+.galleryItem__box--delete {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 100%;
+}
+
+.galleryItem__box--delete .delete {
+  font-family: PhotoSprite;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.galleryItem__box--delete .delete:hover {
+  border-bottom: 1px solid #F3C507;
 }
 
 .galleryItem__box--palette {
@@ -183,6 +307,10 @@ body {
   color: #34495E;
 }
 
+.gallery h3 {
+  color: #34495E;
+}
+
 .gallery__container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -192,6 +320,10 @@ body {
   -webkit-box-pack: space-evenly;
       -ms-flex-pack: space-evenly;
           justify-content: space-evenly;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  min-height: 100vh;
 }
 
 .gallery__container--item {
@@ -228,7 +360,7 @@ body {
 }
 
 .gallery__container--item h3 {
-  margin: 1vw 0px 0px 0px;
+  margin: 2vw 0px 2vw 0px;
 }
 
 .converter {
@@ -265,6 +397,8 @@ body {
 
 .converter__options img {
   width: 80vw;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .converter__options button {
@@ -303,6 +437,13 @@ body {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.converter__options form select {
+  margin-top: 3vw;
+  height: 8vw;
+  width: 25vw;
+  font-size: 3vw;
 }
 
 .converter__options form .converter__options--palette {
@@ -404,6 +545,8 @@ body {
 }
 
 .converter__results img {
+  -o-object-fit: contain;
+     object-fit: contain;
   -ms-interpolation-mode: nearest-neighbor;
       image-rendering: -webkit-optimize-contrast;
       image-rendering: -moz-crisp-edges;
@@ -445,6 +588,9 @@ body {
     margin: 0px;
     font-size: 7vw;
   }
+  .converter__options img {
+    max-height: 90vh;
+  }
   .converter__options form .converter__options--palette button, .converter__options form .converter__options--palette input {
     height: 8vw;
     width: 8vw;
@@ -472,6 +618,9 @@ body {
     width: 60vw;
     height: 5vw;
   }
+  .converter__results img {
+    max-height: 90vh;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -491,7 +640,7 @@ body {
   }
   .converter__options img {
     max-height: 65vh;
-    max-width: 384px;
+    max-width: 90%;
     width: auto;
     margin-top: 1vw;
   }
@@ -511,6 +660,12 @@ body {
             justify-content: center;
     width: 50vw;
     margin-bottom: 1vw;
+  }
+  .converter__options form select {
+    margin-top: 0px;
+    height: auto;
+    width: auto;
+    font-size: 16px;
   }
   .converter__options form .converter__options--palette {
     margin: 20px;
@@ -552,8 +707,8 @@ body {
     -o-object-fit: contain;
        object-fit: contain;
     width: 100%;
-    max-height: 384px;
-    max-width: 384px;
+    max-height: 65vh;
+    max-width: 90%;
   }
   .converter__results button {
     font-size: 1.5vw;
@@ -640,7 +795,7 @@ body {
   display: flex;
   -o-object-fit: contain;
      object-fit: contain;
-  max-height: 35vh;
+  max-height: 60vh;
   max-width: 100%;
 }
 
@@ -701,10 +856,11 @@ body {
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;
+    margin-bottom: 3vw;
   }
   .uploader__box img {
-    max-width: 50vw;
-    max-height: 40vh;
+    max-width: 100%;
+    max-height: 60vh;
     margin: 24px 0px;
   }
 }
@@ -741,8 +897,8 @@ body {
             justify-content: space-between;
   }
   .uploader__box img {
-    max-width: 50vw;
-    max-height: 40vh;
+    max-width: 100%;
+    max-height: 66vh;
     margin: 24px 0px;
   }
 }
@@ -859,9 +1015,9 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
   width: 100vw;
   -webkit-box-pack: space-evenly;
       -ms-flex-pack: space-evenly;
@@ -869,8 +1025,18 @@ body {
 }
 
 .nav__links h3 {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0px;
   font-weight: 500;
   font-size: 5vw;
+  border-bottom: solid 4px transparent;
+  padding: 0px 1vw 3vw 1vw;
+  cursor: pointer;
+}
+
+.nav__links .selected {
+  border-bottom: solid 4px #F3C507;
 }
 
 .nav img {
@@ -904,15 +1070,22 @@ body {
   font-size: 5vw;
   height: 12.5vw;
   width: 30vw;
+  margin-bottom: 1vw;
+  cursor: pointer;
 }
 
 .nav .logoutButton .profilepic {
   -webkit-box-shadow: 3px 3px 5px 1px rgba(31, 31, 31, 0.5);
           box-shadow: 3px 3px 5px 1px rgba(31, 31, 31, 0.5);
   border-radius: 50%;
-  height: 12vw;
-  width: 12vw;
+  height: 10vw;
+  width: 10vw;
   margin: 0px 5px;
+}
+
+.nav .googleButton {
+  margin-bottom: 3vw;
+  cursor: pointer;
 }
 
 @media (min-width: 600px) {
@@ -931,12 +1104,13 @@ body {
     color: #F3C507;
   }
   .nav__links {
+    height: 80px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -webkit-box-align: end;
+        -ms-flex-align: end;
+            align-items: flex-end;
     width: 73vw;
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
@@ -946,6 +1120,7 @@ body {
     font-weight: 500;
     font-size: 16px;
     margin: 0px 10px;
+    padding: 0px 10px 25px 10px;
   }
   .nav img {
     width: 160px;
@@ -954,22 +1129,31 @@ body {
   .nav button {
     margin-left: 20vw;
     margin-right: 3vw;
+    -ms-flex-item-align: center;
+        -ms-grid-row-align: center;
+        align-self: center;
   }
   .nav button img {
     width: 150px;
   }
   .nav .logoutButton {
     font-size: 16px;
-    margin-right: 3vw;
+    margin: 0px 3vw 0px 0px;
     width: 150px;
     float: right;
     height: 35px;
+    -ms-flex-item-align: center;
+        -ms-grid-row-align: center;
+        align-self: center;
   }
   .nav .logoutButton .profilepic {
     border-radius: 50%;
     height: 35px;
     width: 35px;
     margin: 0px 5px;
+  }
+  .nav .googleButton {
+    margin-bottom: 0px;
   }
 }
 

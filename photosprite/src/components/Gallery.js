@@ -3,44 +3,38 @@ import axios from 'axios';
 import GalleryItem from './GalleryItem';
 import Nav from "./Nav";
 
-function Gallery() {
+function Gallery(props) {
     const [conversions, setconversions] = useState([]);
     const [singleItem, setsingleItem] = useState(false)
-
+    const [loginMessage, setloginMessage] = useState("")
     
     useEffect(() => {
         if (localStorage.getItem('token')) {
-            console.log("call axios")
             axios.get("http://localhost:8080/gallery/", { headers: { token: localStorage.getItem('token') } }).then(response => {
-                console.log(response.data);
                 setconversions(response.data.conversions)
             })
+        } else {
+            setloginMessage(<h3>Sign in with Google to see Gallery</h3>)
         }
     }, [])
-
-    function hideItem() {
-        setsingleItem("")
-    }
-    
         
     function setItem(conversion) {
-        console.log(conversion);
-        setsingleItem(<GalleryItem conversion={conversion} hideItem={hideItem}/>)
+        setsingleItem(<GalleryItem conversion={conversion} setsingleItem={setsingleItem}/>)
     }
 
     return (
         <>
-        <Nav />
+        <Nav match={props.match} />
         {singleItem}
         <div className="gallery">
             <h1>Gallery</h1>
             <div className="gallery__container">
+                {loginMessage}
                 {conversions.map((conversion, index) => {
                     return (
                         <div key={index} className="gallery__container--item" onClick={() => setItem(conversion)}>
-                            <img src={'http://localhost:8080/gallery/' + conversion.converted + '/' + localStorage.getItem('token')}  ></img>
+                            <img src={'http://localhost:8080/gallery/' + conversion.converted + '/' + localStorage.getItem('token')} alt="thumbnail" ></img>
                             <h3>{conversion.name}</h3>
-                            
                         </div>
                     )
                 })}

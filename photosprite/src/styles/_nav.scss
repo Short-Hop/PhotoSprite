@@ -7,13 +7,22 @@
 
     &__links {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         width: 100vw;
         justify-content: space-evenly;
 
         h3 {
+            box-sizing: border-box;
+            margin: 0px;
             font-weight: 500;
             font-size: 5vw;
+            border-bottom: solid 4px transparent;
+            padding: 0px 1vw 3vw 1vw;
+            cursor: pointer;
+        }
+
+        .selected {
+            border-bottom: solid 4px $Deepyellow;
         }
     }
     img {
@@ -42,14 +51,21 @@
         font-size: 5vw;
         height: 12.5vw;
         width: 30vw;
+        margin-bottom: 1vw;
+        cursor: pointer;
 
         .profilepic {
             box-shadow: 3px 3px 5px 1px rgba(31, 31, 31, 0.5);
             border-radius: 50%;
-            height: 12vw;
-            width: 12vw;
+            height: 10vw;
+            width: 10vw;
             margin: 0px 5px;
         }
+    }
+
+    .googleButton {
+        margin-bottom: 3vw;
+        cursor: pointer;
     }
 }
 
@@ -62,8 +78,9 @@
         color: $Deepyellow;
 
         &__links {
+            height: 80px;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             width: 73vw;
             justify-content: space-between;
 
@@ -71,6 +88,7 @@
                 font-weight: 500;
                 font-size: 16px;
                 margin: 0px 10px;
+                padding: 0px 10px 25px 10px
             }
         }
 
@@ -82,7 +100,7 @@
         button {
             margin-left: 20vw;
             margin-right: 3vw;
-            
+            align-self: center;
 
             img {
                 width: 150px;
@@ -91,10 +109,12 @@
 
         .logoutButton {
             font-size: 16px;
-            margin-right: 3vw;
+            margin: 0px 3vw 0px 0px;
             width: 150px;
             float: right;
             height: 35px;
+            align-self: center;
+        
 
             .profilepic {
                 border-radius: 50%;
@@ -103,7 +123,11 @@
                 margin: 0px 5px;
             }
         }
+        .googleButton {
+            margin-bottom: 0px;
+        }
     }
+    
 }
 
 @media (min-width: 1024px) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import Uploader from "./Uploader";
 import Nav from "./Nav"
+import ImageCapture from "./TakePhoto";
 
 let gameboy = JSON.stringify(["#0f380f", "#306230", "#8bac0f", "#9bbc0f"])
 let NES = JSON.stringify(["#7C7C7C", "#0000FC", "#0000BC", "#4428BC", "#940084", "#A80020", "#A81000", "#881400", "#503000", "#007800", "#006800", "#005800", 
@@ -20,14 +21,24 @@ function convertHex(hex, opacity) {
     return result;
 }
 
-function Converter() {
+function Converter(props) {
     const [image, setimage] = useState("")
     const [originalImage, setoriginalImage] = useState("")
     const [colors, setcolors] = useState(["#000000"])
-    const [uploader, setuploader] = useState("")
+    const [uploader, setuploader] = useState("");
     const [dimensions, setdimensions] = useState({height: 1, width: 1, ratio: 1})
     const [useRatio, setuseRatio] = useState(true);
     const [hexpalette, sethexpalette] = useState("")
+
+    
+
+    useEffect(() => {
+        if (localStorage.getItem("palette") && JSON.stringify(localStorage.getItem("palette")) !== colors) {
+        
+            setcolors(JSON.parse(localStorage.getItem("palette")))
+            console.log("Using remembered palette")
+        }
+    }, [])
 
     const handleForm = (event) => {
         event.preventDefault()
@@ -44,10 +55,10 @@ function Converter() {
         })
         
         setcolors(newHexPalette);
+        localStorage.setItem("palette", JSON.stringify(newHexPalette));
 
         newHexPalette = newHexPalette.join(" ")
         
-        console.log(newHexPalette);
 
         const data = {
             width: form.width.value,
@@ -59,13 +70,12 @@ function Converter() {
         axios.post("http://localhost:8080/convertImage", data).then(response => {
 
             if (response.data) {
-                let newImage = <img className="newImage" src={"http://localhost:8080/uploads/" + response.data[1] + "?" + new Date().getTime()} alt="converted image"></img>;
-                let original = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data[0] + "?" + new Date().getTime()} alt="original image"></img>;
+                let newImage = <img className="newImage" src={"http://localhost:8080/uploads/" + response.data[1] + "?" + new Date().getTime()} alt="converted"></img>;
+                let original = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data[0] + "?" + new Date().getTime()} alt="original"></img>;
                 
                 setimage(newImage);
                 setoriginalImage(original)
                 sethexpalette(newHexPalette)
-                console.log(hexpalette)
             } else {
                 window.alert("An error has occurred, please try again")
             }
@@ -105,7 +115,7 @@ function Converter() {
             let paletteArray = [];
 
             colors.forEach((item, index) => {
-                paletteArray.push(form.childNodes[0].childNodes[index].value);
+                paletteArray.push(form.childNodes[1].childNodes[index].value);
             })
 
             let savedata = {
@@ -124,14 +134,18 @@ function Converter() {
     }
 
     function showUploader() {
-        setuploader(<Uploader setoriginalImage={setoriginalImage} setuploader={setuploader} setdimensions={setdimensions} />)
+        setuploader(<Uploader setoriginalImage={setoriginalImage} setuploader={setuploader} setdimensions={setdimensions} showtakePhoto={showtakePhoto} />)
+    }
+
+    function showtakePhoto() {
+        setuploader(<ImageCapture setoriginalImage={setoriginalImage} setdimensions={setdimensions} setuploader={setuploader} />)
     }
 
     function setWidth(event) {
         let newdimensions = {}
 
         if (useRatio) {
-            if (event.target.value != "") {
+            if (event.target.value !== "") {
 
                 newdimensions = {
                     width: event.target.value,
@@ -139,7 +153,6 @@ function Converter() {
                     ratio: dimensions.ratio
                 }
             } else {
-                console.log("empty")
                 newdimensions = {
                     width: "",
                     height: 1,
@@ -160,7 +173,7 @@ function Converter() {
         let newdimensions = {}
 
         if (useRatio) {
-            if (event.target.value != "") {
+            if (event.target.value !== "") {
 
                 newdimensions = {
                     width: Math.ceil(event.target.value * dimensions.ratio),
@@ -168,7 +181,7 @@ function Converter() {
                     ratio: dimensions.ratio
                 }
             } else {
-                console.log("empty")
+
                 newdimensions = {
                     width: 1,
                     height: "",
@@ -188,77 +201,90 @@ function Converter() {
         let hexArray = event.target.value.split(" ")
 
         hexArray = hexArray.filter(item => {
-            console.log(item);
+
             return /^#[0-9A-F]{6}$/i.test(item);
         })
         
-        console.log(hexArray);
         sethexpalette(event.target.value);
         setcolors(hexArray);
     }
 
     function loadpalette(event) {
-        if(event.target.value === hexpalette) {
-            let hexArray = event.target.value.split(" ")
-            setcolors(hexArray);
-        } else {
-            console.log(JSON.parse(event.target.value))
-
+        if(event.target.value) {
             setcolors(JSON.parse(event.target.value));
+        } else {
+            setcolors(["#000000"]);
         }
-        
+    }
 
-        
+    function savePalette() {
+        if(localStorage.getItem("token")) {
+            let name = window.prompt("Enter a name for this palette:")
+            if (name) {
+                let data = {
+                    name: name,
+                    palette: colors
+                }
+                axios.post("http://localhost:8080/savePalette/", data, { headers: { token: localStorage.getItem('token') } }).then(response => {
+                    window.alert(response.data)
+                })
+            }
+        } else {
+            window.alert("You must be logged in to save a palette")
+        }
     }
 
     return (
         <>
-        <Nav/>
-        {uploader}
-        <div className="converter">
-            <div className="converter__options">
-                <h1>Convert Image</h1>
-                <button onClick={showUploader}>Select Image</button>
-                {originalImage}
-                <form id="converterForm" onSubmit={handleForm}>
+            <Nav match = {props.match}/>
+            {uploader}
+            <div className="converter">
+                <div className="converter__options">
+                    <h1>Convert Image</h1>
+                    <button onClick={showUploader}>Select Image</button>
+                    {originalImage}
+                    <form id="converterForm" onSubmit={handleForm}>
 
-                    <select onChange={loadpalette}>
-                        <option value={hexpalette}>Custom</option>
-                        <option value={gameboy}>Game Boy</option>
-                        <option value={NES}>NES</option>
-                    </select>
-                    
-                    <div className="converter__options--palette">
-                        {colors.map((value, index) =>
-                            <input className="color" type="color" value={value} key={index} onChange={handleForm}></input>
-                        )}
-                        <button type="button" onClick={addColor}>+</button>
-                        <button type="button" onClick={removeColor}>–</button>
-                    </div>
-                    <div className="converter__options--size">
+                        <select onChange={loadpalette}>
+                            <option value={localStorage.getItem("palette")}>Custom</option>
+                            <option value={gameboy}>Game Boy</option>
+                            <option value={NES}>NES</option>
+                        </select>
                         
-                        Width:<input className="numberInput" name="width" type="number" min="1" value={dimensions.width} onChange={setWidth}></input>
-                        Height:<input className="numberInput" name="height" type="number" min="1" value={dimensions.height} onChange={setHeight}></input>
-                    </div>
-                    <div className="converter__options--ratio">
-                        Maintain Aspect Ratio:<input className="checkbox" type="checkbox" checked={useRatio} onChange={useAspectRatio}></input>
-                    </div>
-                    <div className="converter__options--hex">
-                        Hex codes:<textarea type="text" value={hexpalette} onChange={updatePalette}></textarea>
-                    </div>
-                    <button type="submit">Submit</button>
-                   
-                </form>
-                
-            </div>
-            <form className="converter__results" onSubmit={saveToGallery}>
-                <h1>Result</h1>
-                Name:<input name="fileName" type="text" defaultValue='My Sprite'></input>
-                {image}
+                        
+                        <div className="converter__options--palette">
+                            {colors.map((value, index) =>
+                                <input className="color" type="color" value={value} key={index} onChange={handleForm}></input>
+                            )}
+                            <button type="button" onClick={addColor}>+</button>
+                            <button type="button" onClick={removeColor}>–</button>
+                            <button onClick={savePalette}>save</button>
 
-                <button>Save to Gallery</button>
-            </form>
-        </div>
+                        </div>
+                        <div className="converter__options--size">
+                            
+                            Width:<input className="numberInput" name="width" type="number" min="1" value={dimensions.width} onChange={setWidth}></input>
+                            Height:<input className="numberInput" name="height" type="number" min="1" value={dimensions.height} onChange={setHeight}></input>
+                        </div>
+                        <div className="converter__options--ratio">
+                            Maintain Aspect Ratio:<input className="checkbox" type="checkbox" checked={useRatio} onChange={useAspectRatio}></input>
+                        </div>
+                        <div className="converter__options--hex">
+                            Hex codes:<textarea type="text" value={hexpalette} onChange={updatePalette}></textarea>
+                        </div>
+                        <button type="submit">Submit</button>
+                    
+                    </form>
+                    
+                </div>
+                <form className="converter__results" onSubmit={saveToGallery}>
+                    <h1>Result</h1>
+                    Name:<input name="fileName" type="text" defaultValue='My Sprite'></input>
+                    {image}
+
+                    <button>Save to Gallery</button>
+                </form>
+            </div>
         </>
     )
 }

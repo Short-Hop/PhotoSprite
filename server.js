@@ -9,15 +9,13 @@ var Jimp = require('jimp');
 var PNGImage = require("pngjs-image");
 const fs = require('fs');
 const download = require('image-downloader');
-var currentFileName = "fileInput";
-var extension = ".png";
+var currentFileName = "";
 let tempID = 0;
 const jwt = require("jsonwebtoken");
 
 let allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
 var privateKEY = fs.readFileSync('./private.key', 'utf8');
 var publicKEY = fs.readFileSync('./public.key', 'utf8');
-
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -26,7 +24,7 @@ var storage = multer.diskStorage({
     filename: function (req, file, cb) {
         console.log((file.mimetype));
         extension = ".jpg"
-        currentFileName = file.fieldname + tempID;
+        currentFileName = tempID;
         cb(null, currentFileName + ".png")
     }
 })
@@ -63,10 +61,11 @@ async function getUser(tokenId) {
 }
 
 app.get("/uploads/:id", (req, res) => {
-    console.log(req.params.id)
-    if (fs.existsSync("D:/Documents/Brainstation/Capstone/uploads/" + req.params.id)) {
-        console.log("Gave image file")
-        res.sendFile("D:/Documents/Brainstation/Capstone/uploads/" + req.params.id)
+
+    if (fs.existsSync(__dirname + '/uploads/' + req.params.id)) {
+
+            
+        res.sendFile(__dirname + '/uploads/' + req.params.id)
     } else {
         res.sendStatus(404)
     }
@@ -76,9 +75,10 @@ app.get("/gallery/:id/:token", (req, res) => {
 
     getUser(req.params.token).then(userId => {
 
-        if (fs.existsSync("D:/Documents/Brainstation/Capstone/users/" + userId + "/" + req.params.id)) {
-            console.log("Gave image file")
-            res.sendFile("D:/Documents/Brainstation/Capstone/users/" + userId + "/" + req.params.id)
+        if (fs.existsSync(__dirname + '/users/' + userId + "/" + req.params.id)) {
+            
+
+            res.sendFile(__dirname + '/users/'+ userId + "/" + req.params.id)
         } else {
             res.sendStatus(404)
         }
@@ -139,16 +139,16 @@ app.post("/upload", (req, res) => {
 
             let options = {
                 url: req.body.fileInput,
-                dest: `./uploads/fileInput${tempID}.png`,
+                dest: `./uploads/${tempID}.png`,
             }
 
             download.image(options).then(() => {
-                res.send(`fileInput${tempID}.png`);
+                res.send(`${tempID}.png`);
             }).catch(()=> {
                 res.statusCode(400);
             })
         } else {
-            res.send("fileInput" + tempID + ".png");
+            res.send(tempID + ".png");
         }
     })
 })
@@ -156,13 +156,13 @@ app.post("/upload", (req, res) => {
 app.post('/convertImage', (req, res) => {
     let paletteArray = req.body.paletteArray;
 
-    Jimp.read("./uploads/fileInput" + req.body.tempID + ".png").then(image => {
+    Jimp.read("./uploads/" + req.body.tempID + ".png").then(image => {
         return image
             .resize(parseInt(req.body.width), parseInt(req.body.height), Jimp.RESIZE_NEAREST_NEIGHBOR) // resize
-            .write("./uploads/fileInput" + req.body.tempID + "-converted" + ".png"); // save
+            .write("./uploads/" + req.body.tempID + "-converted" + ".png"); // save
     }).then(()=> {
 
-        getPixels("./uploads/fileInput" + req.body.tempID + "-converted" + ".png", function (err, pixels) {
+        getPixels("./uploads/" + req.body.tempID + "-converted" + ".png", function (err, pixels) {
             if (err) {
                 console.log("Error getting pixels")
                 res.sendStatus(500)
@@ -197,10 +197,10 @@ app.post('/convertImage', (req, res) => {
                 }
             }
 
-            finalImage.writeImage("./uploads/fileInput" + req.body.tempID + "-converted" + ".png", (err) => {
+            finalImage.writeImage("./uploads/" + req.body.tempID + "-converted" + ".png", (err) => {
                 if (err) throw err;
                 console.log("File written");
-                let files = ['fileInput' + req.body.tempID + ".png", 'fileInput' + req.body.tempID + "-converted" + ".png"]
+                let files = [req.body.tempID + ".png", req.body.tempID + "-converted" + ".png"]
 
                 return res.send(files);
 
@@ -220,14 +220,14 @@ app.post("/saveToGallery", (req, res) => {
             if (fs.existsSync("./users/" + userId + "/" + req.body.name + "-p.png")) {
                 return res.send("A conversion with that name already exists");
             } else {
-                fs.renameSync("./uploads/fileInput" + req.body.tempID + ".png", "./users/" + userId + "/" + req.body.name + ".png");
-                fs.renameSync("./uploads/fileInput" + req.body.tempID + "-converted.png", "./users/" + userId + "/" + req.body.name + "-p.png");
+                fs.renameSync("./uploads/" + req.body.tempID + ".png", "./users/" + userId + "/" + req.body.name + ".png");
+                fs.renameSync("./uploads/" + req.body.tempID + "-converted.png", "./users/" + userId + "/" + req.body.name + "-p.png");
                 res.send("File Saved")
             }
         } else {
             fs.mkdirSync("./users/" + userId + "/");
-            fs.renameSync("./uploads/fileInput" + req.body.tempID + ".png", "./users/" + userId + "/" + req.body.name + ".png");
-            fs.renameSync("./uploads/fileInput" + req.body.tempID + "-converted.png", "./users/" + userId + "/" + req.body.name + "-p.png");
+            fs.renameSync("./uploads/" + req.body.tempID + ".png", "./users/" + userId + "/" + req.body.name + ".png");
+            fs.renameSync("./uploads/" + req.body.tempID + "-converted.png", "./users/" + userId + "/" + req.body.name + "-p.png");
             res.send("File Saved")
         }
 
@@ -257,6 +257,7 @@ app.post("/saveToGallery", (req, res) => {
 
             let user = {
                 userId: userId,
+                palettes:[],
                 conversions: [
                     {
                         name: req.body.name,
@@ -276,8 +277,57 @@ app.post("/saveToGallery", (req, res) => {
         console.log(error)
         res.sendStatus(403)
     });
-
 })
+
+app.post("/savePalette/", (req, res) => {
+
+    console.log(req.body);
+    getUser(req.headers.token).then(userId => {
+        let userIndex = -1
+        allUsers.forEach((user, index) => {
+            if (user.userId == userId) {
+                userIndex = index;
+            }
+        })
+
+        if (userIndex > -1) {
+            let user = allUsers[userIndex]
+            if (user.palettes.length > 0) {
+                if (user.palettes.filter(palette => palette.name === req.body.name) !== []) {
+                    res.send("A palette with that name already exists");
+                } else {
+                    user.palettes.push(req.body);
+                    allUsers[userIndex] = user;
+                    fs.writeFileSync("./users.json", JSON.stringify(allUsers));
+                    allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
+
+                    res.send("palette saved");
+                }
+            } else {
+                user.palettes.push(req.body)
+                allUsers[userIndex] = user;
+                fs.writeFileSync("./users.json", JSON.stringify(allUsers));
+                allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
+                res.send("palette saved");
+            }
+        } else {
+            let user = {
+                userId: userId,
+                palettes: [req.body],
+                conversions: []
+            }
+
+            allUsers.push(user);
+            fs.writeFileSync("./users.json", JSON.stringify(allUsers));
+            allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
+            res.send("palette saved");
+        }
+
+    }).catch(error => {
+        console.log(error)
+        res.sendStatus(403)
+    }) 
+}) 
 
 app.get("/gallery/", (req, res) => {
     getUser(req.headers.token).then(userId => {
@@ -295,12 +345,33 @@ app.get("/gallery/", (req, res) => {
     })
 })
 
+app.delete("/gallery/:name", (req, res) => {
+    getUser(req.headers.token).then(userId => {
+        let userIndex = -1
+        allUsers.forEach((user, index) => {
+            if (user.userId == userId) {
+                userIndex = index;
+            }
+        })
+
+        if (userIndex > -1) {
+            allUsers[userIndex].conversions = allUsers[userIndex].conversions.filter(conversion => conversion.name !== req.params.name)
+            fs.unlinkSync("./users/" + userId + "/" + req.params.name + "-p.png")
+            fs.unlinkSync("./users/" + userId + "/" + req.params.name + ".png")
+        }
+
+        fs.writeFileSync("./users.json", JSON.stringify(allUsers))
+        allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
+        res.send("Deleted");
+        
+    }).catch(error => {
+        console.log(error)
+        res.sendStatus(403)
+    })
+})
+
 
 app.listen(8080, () => {
     console.log("Listening on 8080. . .")
 })
 
-user = {
-    userId: ""
-
-}

@@ -1,0 +1,88 @@
+.takephoto {
+    position: fixed;
+    top: 5vh;
+    width: 100vw;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    &__box {
+        box-shadow: 0px 0px 100px 100px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background-color: $Darkblue;
+        width: 70vw;
+        max-height: 90vh;
+        border-radius: 3vw;
+        padding: 5vw;
+
+        video {
+            margin-bottom: 3vw;
+            display: flex;
+            object-fit: contain;
+            max-height: 60vh;
+            max-width: 100%;
+        }
+
+        button {
+            box-sizing: border-box;
+            background-color: $Deepyellow;
+            color: $Darkblue;
+            font-family: PhotoSprite;
+            font-size: 3vw;
+            border-radius: 1vw;
+            padding: 1vw;
+            vertical-align: top;
+            border: solid 1px $Deepyellow;
+            cursor: pointer;
+            transition: 0.3s;
+
+            &:hover {
+                color: $Deepyellow;
+                background-color: $Darkblue;
+                transition: 0.3s;
+            }
+        }
+    }
+}
+
+@media (min-width: 600px) {
+    .takephoto {
+
+        &__box {
+            width: 60vw;
+            padding: 30px;
+
+            video {
+                max-width: 100%;
+                max-height: 60vh;
+                margin-bottom: 24px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 8px;
+            }
+        }
+    }
+}
+
+@media (min-width: 1024px) {
+    .takephoto {
+
+        &__box {
+            width: 60vw;
+            padding: 30px;
+
+            video {
+                max-width: 100%;
+                max-height: 66vh;
+                margin-bottom: 24px;
+            }
+        }
+    }
+}

@@ -36,6 +36,22 @@
             font-weight: 500;
         }
 
+        &--delete {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            
+
+            .delete {
+                font-family: PhotoSprite;
+                font-size: 12px;
+                cursor: pointer;
+                &:hover {
+                    border-bottom: 1px solid $Deepyellow
+                }
+            }
+        }
+
 
         &--palette {
             display: flex;

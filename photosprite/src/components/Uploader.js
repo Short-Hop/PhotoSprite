@@ -3,6 +3,7 @@ import axios from "axios";
 
 function Uploader(props) {
     const [image, setimage] = useState("")
+    
 
     const handleForm = (event) => {
         event.preventDefault()
@@ -23,7 +24,6 @@ function Uploader(props) {
 
         axios.post("http://localhost:8080/tempID", idData).then(respones => {
             axios.post("http://localhost:8080/upload", data).then(response => {
-                console.log(response.data);
                 let uploadedImage = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
 
 
@@ -37,12 +37,10 @@ function Uploader(props) {
                         ratio: width / height
                     }
 
-                    console.log(newDimensions);
-
                     props.setdimensions(newDimensions);
                 }
                 img.src = "http://localhost:8080/uploads/" + response.data + "?" + new Date().getTime();
-
+                setform("")
                 setimage(uploadedImage);
                 props.setoriginalImage(uploadedImage);
             })
@@ -50,20 +48,26 @@ function Uploader(props) {
 
         
     }
+    const [form, setform] = useState(
+        <form id="uploadForm" onSubmit={handleForm}>
+            <h1>Upload a File</h1>
+            <input className="inputButton" name="fileInput" type="file" accept=".png,.jpg" onChange={handleForm}></input>
+
+            <h1>or choose a file URL</h1>
+            <div className="uploader__box--url">
+                <input name="fileInput2" type="url" accept=".png,.jpg"></input>
+                <button>Submit</button>
+            </div>
+            <h1>or take a picture</h1>
+            <div className="uploader__box--url">
+                <button className="cameraButton" onClick={props.showtakePhoto}>Camera</button>
+            </div>
+        </form>
+    )
     return (
         <div className="uploader">
             <div className="uploader__box">
-                <form id="uploadForm" onSubmit={handleForm}>
-                    <h1>Upload a File</h1>
-                    <input className="inputButton" name="fileInput" type="file" accept=".png,.jpg" onChange={handleForm}></input>
-
-                    <h1>or choose a file URL</h1>
-                    <div className="uploader__box--url">
-                        <input name="fileInput2" type="url" accept=".png,.jpg"></input>
-                        <button>Submit</button>
-                    </div>
-                    
-                </form>
+                {form}
                 {image}
                 <div className="uploader__box--image">
                     
