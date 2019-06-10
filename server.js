@@ -12,11 +12,13 @@ const download = require('image-downloader');
 var currentFileName = "";
 let tempID = 0;
 const jwt = require("jsonwebtoken");
+const path = require("path")
 
 app.use(cors());
 app.use(express.json());
-app.use("/palette", require("./routes/palette"));
-app.use("/gallery", require("./routes/gallery"));
+app.use("/api/palette", require("./routes/palette"));
+app.use("/api/gallery", require("./routes/gallery"));
+app.use(express.static(path.join(__dirname, "photosprite", "build")))
 
 let allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
 var privateKEY = fs.readFileSync('./private.key', 'utf8');
@@ -74,7 +76,7 @@ async function getUser(tokenId) {
     return userInfo.userId;
 }
 
-app.get("/uploads/:id", (req, res) => {
+app.get("/api/uploads/:id", (req, res) => {
 
     if (fs.existsSync(__dirname + '/uploads/' + req.params.id)) {
 
@@ -85,11 +87,7 @@ app.get("/uploads/:id", (req, res) => {
     }
 })
 
-
-
-
-
-app.post("/signin", (req, res) =>{   
+app.post("/api/signin", (req, res) =>{   
     verify(req.body.tokenId).then(response => {
 
         let payload = {
@@ -113,7 +111,7 @@ app.post("/signin", (req, res) =>{
     });
 })
 
-app.post("/tempID", (req, res) => {
+app.post("/api/tempID", (req, res) => {
 
     console.log(req.body.tempID);
     if (req.body.tempID) {
@@ -125,7 +123,7 @@ app.post("/tempID", (req, res) => {
     
 })
 
-app.post("/upload", (req, res) => {
+app.post("/api/upload", (req, res) => {
 
     upload(req, res, function (err) {  
 
@@ -154,7 +152,7 @@ app.post("/upload", (req, res) => {
     })
 })
 
-app.post('/convertImage', (req, res) => {
+app.post('/api/convertImage', (req, res) => {
     let paletteArray = req.body.paletteArray;
 
     if (fs.existsSync("./uploads/" + req.body.tempID + ".png")) {
@@ -218,7 +216,7 @@ app.post('/convertImage', (req, res) => {
     }    
 })
 
-app.get("/gallery/:id/:token", (req, res) => {
+app.get("/api/gallery/:id/:token", (req, res) => {
 
     getUser(req.params.token).then(userId => {
 
@@ -235,11 +233,17 @@ app.get("/gallery/:id/:token", (req, res) => {
     })
 })
 
-
 let port = process.env.PORT;
 if (port == null || port == "") {
     port = 8080;
 }
+
+console.log(port)
+
+app.get("*", (req, res) => {
+    console.log(path.join(__dirname + "/photosprite/build/index.html"))
+    res.sendFile(path.join(__dirname + "/photosprite/build/index.html"));
+});
 
 app.listen(port, () => {
     console.log("Listening. . .")

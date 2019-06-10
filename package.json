@@ -24,8 +24,7 @@
     "start": "node server.js",
     "client": "npm start --prefix photosprite",
     "server": "nodemon server.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "concurrently \"node server.js\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",
   "license": "ISC",

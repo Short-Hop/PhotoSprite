@@ -28,9 +28,9 @@ function TakePhoto(props) {
                 tempID: localStorage.getItem("tempID")
             }
 
-            axios.post("http://localhost:8080/tempID", idData).then(response => {
-                axios.post("http://localhost:8080/upload", data).then(response => {
-                    let uploadedImage = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
+            axios.post("http://localhost:8080/api/tempID", idData).then(response => {
+                axios.post("http://localhost:8080/api/upload", data).then(response => {
+                    let uploadedImage = <img className="originalImage" src={"http://localhost:8080/api/uploads/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
 
                     let img = new Image();
                     img.onload = function () {
@@ -46,7 +46,7 @@ function TakePhoto(props) {
                         // setimage(uploadedImage);
                         props.setdimensions(newDimensions);
                     }
-                    img.src = "http://localhost:8080/uploads/" + response.data + "?" + new Date().getTime();
+                    img.src = "http://localhost:8080/api/uploads/" + response.data + "?" + new Date().getTime();
                     props.setoriginalImage(uploadedImage);
                     
                     navigator.mediaDevices.getUserMedia({ video: true })

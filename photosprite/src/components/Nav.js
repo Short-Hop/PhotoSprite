@@ -18,11 +18,12 @@ function Nav(props) {
     }, [])
 
     const responseGoogle = (GoogleResponse) => {
+        console.log(GoogleResponse)
         if (GoogleResponse.profileObj.imageUrl) {
             setprofilepic(GoogleResponse.profileObj.imageUrl)
         }
 
-        axios.post("http://localhost:8080/signin", GoogleResponse).then(response => {
+        axios.post("http://localhost:8080/api/signin", GoogleResponse).then(response => {
 
             if (response.data.googleId === GoogleResponse.googleId) {
 

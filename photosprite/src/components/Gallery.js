@@ -10,7 +10,7 @@ function Gallery(props) {
     
     useEffect(() => {
         if (localStorage.getItem('token')) {
-            axios.get("http://localhost:8080/gallery/", { headers: { token: localStorage.getItem('token') } }).then(response => {
+            axios.get("http://localhost:8080/api/gallery/", { headers: { token: localStorage.getItem('token') } }).then(response => {
                 setconversions(response.data.conversions)
             })
         } else {
@@ -33,7 +33,7 @@ function Gallery(props) {
                 {conversions.map((conversion, index) => {
                     return (
                         <div key={index} className="gallery__container--item" onClick={() => setItem(conversion)}>
-                            <img src={'http://localhost:8080/gallery/' + conversion.converted + '/' + localStorage.getItem('token')} alt="thumbnail" ></img>
+                            <img src={'http://localhost:8080/api/gallery/' + conversion.converted + '/' + localStorage.getItem('token')} alt="thumbnail" ></img>
                             <h3>{conversion.name}</h3>
                         </div>
                     )

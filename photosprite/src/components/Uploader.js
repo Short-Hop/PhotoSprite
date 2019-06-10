@@ -22,9 +22,9 @@ function Uploader(props) {
             tempID: localStorage.getItem("tempID")
         }
 
-        axios.post("http://localhost:8080/tempID", idData).then(respones => {
-            axios.post("http://localhost:8080/upload", data).then(response => {
-                let uploadedImage = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
+        axios.post("http://localhost:8080/api/tempID", idData).then(respones => {
+            axios.post("http://localhost:8080/api/upload", data).then(response => {
+                let uploadedImage = <img className="originalImage" src={"http://localhost:8080/api/uploads/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
 
 
                 let img = new Image();
@@ -39,7 +39,7 @@ function Uploader(props) {
 
                     props.setdimensions(newDimensions);
                 }
-                img.src = "http://localhost:8080/uploads/" + response.data + "?" + new Date().getTime();
+                img.src = "http://localhost:8080/api/uploads/" + response.data + "?" + new Date().getTime();
                 setform("")
                 setimage(uploadedImage);
                 props.setoriginalImage(uploadedImage);

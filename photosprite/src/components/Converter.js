@@ -34,7 +34,7 @@ function Converter(props) {
             console.log("Using remembered palette")
         }
 
-        axios.get("http://localhost:8080/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
+        axios.get("http://localhost:8080/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
             setpresets(response.data)
         })
 
@@ -68,11 +68,11 @@ function Converter(props) {
         }
 
         if(originalImage !== "") {
-            axios.post("http://localhost:8080/convertImage", data).then(response => {
+            axios.post("http://localhost:8080/api/convertImage", data).then(response => {
 
                 if (response.data) {
-                    let newImage = <img className="newImage" src={"http://localhost:8080/uploads/" + response.data[1] + "?" + new Date().getTime()} alt="converted"></img>;
-                    let original = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data[0] + "?" + new Date().getTime()} alt="original"></img>;
+                    let newImage = <img className="newImage" src={"http://localhost:8080/api/uploads/" + response.data[1] + "?" + new Date().getTime()} alt="converted"></img>;
+                    let original = <img className="originalImage" src={"http://localhost:8080/api/uploads/" + response.data[0] + "?" + new Date().getTime()} alt="original"></img>;
 
                     setimage(newImage);
                     sethexpalette(newHexPalette)
@@ -125,7 +125,7 @@ function Converter(props) {
                 palette: paletteArray
             }
 
-            axios.post("http://localhost:8080/gallery", savedata, { headers: { token: localStorage.getItem('token') } }).then(response => {
+            axios.post("http://localhost:8080/api/gallery", savedata, { headers: { token: localStorage.getItem('token') } }).then(response => {
                 window.alert(response.data);
             })
 
@@ -234,10 +234,10 @@ function Converter(props) {
                     name: name,
                     palette: colors
                 }
-                axios.post("http://localhost:8080/palette", data, { headers: { token: localStorage.getItem('token') } }).then(response => {
+                axios.post("http://localhost:8080/api/palette", data, { headers: { token: localStorage.getItem('token') } }).then(response => {
                     window.alert(response.data)
 
-                    axios.get("http://localhost:8080/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
+                    axios.get("http://localhost:8080/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
                         setpresets(response.data)
                     })
                 })
@@ -252,9 +252,9 @@ function Converter(props) {
         
         if (window.confirm("Are you sure you want to delete this palette?")) {
 
-            axios.delete("http://localhost:8080/palette/" + presets[selector.selectedIndex - 1].name, { headers: { token: localStorage.getItem('token') } }).then(response => {
+            axios.delete("http://localhost:8080/api/palette/" + presets[selector.selectedIndex - 1].name, { headers: { token: localStorage.getItem('token') } }).then(response => {
 
-                axios.get("http://localhost:8080/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
+                axios.get("http://localhost:8080/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
                     setpresets(response.data)
                 })
             })
