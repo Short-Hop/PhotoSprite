@@ -19,6 +19,9 @@
             border-bottom: solid 4px transparent;
             padding: 0px 1vw 3vw 1vw;
             cursor: pointer;
+            &:hover {
+                border-bottom: solid 4px $Deepyellow;
+            }
         }
 
         .selected {

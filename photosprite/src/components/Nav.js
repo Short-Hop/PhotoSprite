@@ -86,9 +86,7 @@ function Nav(props) {
                 </Link>
                 { loginButton }
             </div>
-            
-        </div>
-        
+        </div>   
     )
 }
 

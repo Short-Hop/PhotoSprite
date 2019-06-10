@@ -40,9 +40,6 @@ function GalleryItem(props) {
                     <a className="link" href={'http://localhost:8080/gallery/' + props.conversion.converted + '/' + localStorage.getItem('token')} download>Download</a>
                 </div>
             </div>
-            
-            
-            
         </div>
     )
 }

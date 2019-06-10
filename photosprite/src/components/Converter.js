@@ -4,13 +4,6 @@ import Uploader from "./Uploader";
 import Nav from "./Nav"
 import ImageCapture from "./TakePhoto";
 
-let gameboy = JSON.stringify(["#0f380f", "#306230", "#8bac0f", "#9bbc0f"])
-let NES = JSON.stringify(["#7C7C7C", "#0000FC", "#0000BC", "#4428BC", "#940084", "#A80020", "#A81000", "#881400", "#503000", "#007800", "#006800", "#005800", 
-"#004058", "#000000", "#000000", "#000000", "#BCBCBC", "#0078F8", "#0058F8", "#6844FC", "#D800CC", "#E40058", "#F83800", "#E45C10", "#AC7C00", 
-"#00B800", "#00A800", "#00A844", "#008888", "#000000", "#000000", "#000000", "#F8F8F8", "#3CBCFC", "#6888FC", "#9878F8", "#F878F8", "#F85898", 
-"#F87858", "#FCA044", "#F8B800", "#B8F818", "#58D854", "#58F898", "#00E8D8", "#787878", "#000000", "#000000", "#FCFCFC", "#A4E4FC", "#B8B8F8", 
-"#D8B8F8", "#F8B8F8", "#F8A4C0", "#F0D0B0", "#F8D878", "#D8F878", "#B8F8B8", "#B8F8D8", "#00FCFC", "#F8D8F8", "#000000", "#000000"])
-
 function convertHex(hex, opacity) {
     hex = hex.replace('#', '');
     let r = parseInt(hex.substring(0, 2), 16);
@@ -28,7 +21,9 @@ function Converter(props) {
     const [uploader, setuploader] = useState("");
     const [dimensions, setdimensions] = useState({height: 1, width: 1, ratio: 1})
     const [useRatio, setuseRatio] = useState(true);
-    const [hexpalette, sethexpalette] = useState("")
+    const [hexpalette, sethexpalette] = useState("");
+    const [presets, setpresets] = useState([]);
+    const [deleteButton, setdeleteButton] = useState("")
 
     
 
@@ -38,6 +33,11 @@ function Converter(props) {
             setcolors(JSON.parse(localStorage.getItem("palette")))
             console.log("Using remembered palette")
         }
+
+        axios.get("http://localhost:8080/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
+            setpresets(response.data)
+        })
+
     }, [])
 
     const handleForm = (event) => {
@@ -67,19 +67,20 @@ function Converter(props) {
             tempID: localStorage.getItem("tempID")
         }
 
-        axios.post("http://localhost:8080/convertImage", data).then(response => {
+        if(originalImage !== "") {
+            axios.post("http://localhost:8080/convertImage", data).then(response => {
 
-            if (response.data) {
-                let newImage = <img className="newImage" src={"http://localhost:8080/uploads/" + response.data[1] + "?" + new Date().getTime()} alt="converted"></img>;
-                let original = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data[0] + "?" + new Date().getTime()} alt="original"></img>;
-                
-                setimage(newImage);
-                setoriginalImage(original)
-                sethexpalette(newHexPalette)
-            } else {
-                window.alert("An error has occurred, please try again")
-            }
-        })
+                if (response.data) {
+                    let newImage = <img className="newImage" src={"http://localhost:8080/uploads/" + response.data[1] + "?" + new Date().getTime()} alt="converted"></img>;
+                    let original = <img className="originalImage" src={"http://localhost:8080/uploads/" + response.data[0] + "?" + new Date().getTime()} alt="original"></img>;
+
+                    setimage(newImage);
+                    sethexpalette(newHexPalette)
+                } else {
+                    window.alert("An error has occurred, please try again")
+                }
+            })
+        }
     }
 
     function addColor() {
@@ -124,7 +125,7 @@ function Converter(props) {
                 palette: paletteArray
             }
 
-            axios.post("http://localhost:8080/saveToGallery", savedata, { headers: { token: localStorage.getItem('token') } }).then(response => {
+            axios.post("http://localhost:8080/gallery", savedata, { headers: { token: localStorage.getItem('token') } }).then(response => {
                 window.alert(response.data);
             })
 
@@ -215,6 +216,14 @@ function Converter(props) {
         } else {
             setcolors(["#000000"]);
         }
+
+        let selector = document.getElementById("paletteList");
+
+        if (selector.selectedIndex !== 0) {
+            setdeleteButton(<button className="delete" onClick={deletePalette}>delete</button>)
+        } else {
+            setdeleteButton("")
+        }
     }
 
     function savePalette() {
@@ -225,12 +234,30 @@ function Converter(props) {
                     name: name,
                     palette: colors
                 }
-                axios.post("http://localhost:8080/savePalette/", data, { headers: { token: localStorage.getItem('token') } }).then(response => {
+                axios.post("http://localhost:8080/palette", data, { headers: { token: localStorage.getItem('token') } }).then(response => {
                     window.alert(response.data)
+
+                    axios.get("http://localhost:8080/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
+                        setpresets(response.data)
+                    })
                 })
             }
         } else {
             window.alert("You must be logged in to save a palette")
+        }
+    }
+
+    function deletePalette() {
+        let selector = document.getElementById("paletteList");
+        
+        if (window.confirm("Are you sure you want to delete this palette?")) {
+
+            axios.delete("http://localhost:8080/palette/" + presets[selector.selectedIndex - 1].name, { headers: { token: localStorage.getItem('token') } }).then(response => {
+
+                axios.get("http://localhost:8080/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
+                    setpresets(response.data)
+                })
+            })
         }
     }
 
@@ -245,13 +272,13 @@ function Converter(props) {
                     {originalImage}
                     <form id="converterForm" onSubmit={handleForm}>
 
-                        <select onChange={loadpalette}>
+                        <select onChange={loadpalette} id="paletteList">
                             <option value={localStorage.getItem("palette")}>Custom</option>
-                            <option value={gameboy}>Game Boy</option>
-                            <option value={NES}>NES</option>
+                            {presets.map(palette => {
+                                return <option value={JSON.stringify(palette.palette)} key={palette.name}>{palette.name}</option>
+                            })}
                         </select>
-                        
-                        
+                         
                         <div className="converter__options--palette">
                             {colors.map((value, index) =>
                                 <input className="color" type="color" value={value} key={index} onChange={handleForm}></input>
@@ -259,6 +286,7 @@ function Converter(props) {
                             <button type="button" onClick={addColor}>+</button>
                             <button type="button" onClick={removeColor}>–</button>
                             <button onClick={savePalette}>save</button>
+                            {deleteButton}
 
                         </div>
                         <div className="converter__options--size">

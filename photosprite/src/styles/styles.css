@@ -308,7 +308,8 @@ body {
 }
 
 .gallery h3 {
-  color: #34495E;
+  color: #F3C507;
+  font-weight: 500;
 }
 
 .gallery__container {
@@ -342,7 +343,7 @@ body {
       -ms-flex-align: center;
           align-items: center;
   width: 300px;
-  height: 300px;
+  height: auto;
   margin: 15px;
   padding: 15px;
 }
@@ -355,7 +356,6 @@ body {
       image-rendering: pixelated;
   -o-object-fit: contain;
      object-fit: contain;
-  height: 100%;
   width: 100%;
 }
 
@@ -462,6 +462,10 @@ body {
       flex-wrap: wrap;
   width: 85vw;
   margin: 5vw 0px;
+}
+
+.converter__options form .converter__options--palette .delete {
+  margin: 0px 8vw;
 }
 
 .converter__options form .converter__options--palette button, .converter__options form .converter__options--palette input {
@@ -591,6 +595,9 @@ body {
   .converter__options img {
     max-height: 90vh;
   }
+  .converter__options form .converter__options--palette .delete {
+    margin: 0px 6vw;
+  }
   .converter__options form .converter__options--palette button, .converter__options form .converter__options--palette input {
     height: 8vw;
     width: 8vw;
@@ -671,6 +678,9 @@ body {
     margin: 20px;
     width: auto;
     max-width: 250px;
+  }
+  .converter__options form .converter__options--palette .delete {
+    margin: 0px 30px;
   }
   .converter__options form .converter__options--palette button, .converter__options form .converter__options--palette input {
     height: 3vw;
@@ -1033,6 +1043,10 @@ body {
   border-bottom: solid 4px transparent;
   padding: 0px 1vw 3vw 1vw;
   cursor: pointer;
+}
+
+.nav__links h3:hover {
+  border-bottom: solid 4px #F3C507;
 }
 
 .nav__links .selected {

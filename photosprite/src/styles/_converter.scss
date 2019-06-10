@@ -10,6 +10,8 @@
         font-size: 10vw;
     }
 
+    
+
     &__options {
         color: $Darkblue;
         display: flex;
@@ -43,6 +45,8 @@
             }
         }
 
+        
+
         form {
             display: flex;
             flex-direction: column;
@@ -63,6 +67,10 @@
                 flex-wrap: wrap;
                 width: 85vw;
                 margin: 5vw 0px;
+
+                .delete {
+                    margin: 0px 8vw;
+                }
 
                 button, input {
                     padding: 0px 2px;
@@ -185,6 +193,10 @@
             form {
                 .converter__options--palette {
 
+                    .delete {
+                        margin: 0px 6vw;
+                    }
+
                     button, input {
                         height: 8vw;
                         width: 8vw;
@@ -266,6 +278,10 @@
                     margin: 20px;
                     width: auto;
                     max-width: 250px;
+
+                    .delete {
+                        margin: 0px 30px
+                    }
 
                     button, input {
                         height: 3vw;
