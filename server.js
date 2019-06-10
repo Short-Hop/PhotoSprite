@@ -23,6 +23,18 @@ var privateKEY = fs.readFileSync('./private.key', 'utf8');
 var publicKEY = fs.readFileSync('./public.key', 'utf8');
 
 
+setInterval(() => {
+    let files = fs.readdirSync("./uploads")
+    files.forEach(filename => {
+        let time = parseInt(filename.substr(0, 13))
+        if (Date.now() - time > 3600000) {
+            fs.unlinkSync("./uploads/" + filename);
+        }
+        console.log(time);
+    })
+    
+}, 3600000);
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -223,7 +235,12 @@ app.get("/gallery/:id/:token", (req, res) => {
     })
 })
 
-app.listen(8080, () => {
-    console.log("Listening on 8080. . .")
-})
 
+let port = process.env.PORT;
+if (port == null || port == "") {
+    port = 8080;
+}
+
+app.listen(port, () => {
+    console.log("Listening. . .")
+});

@@ -691,6 +691,7 @@ body {
   .converter__options form .converter__options--size {
     font-size: 1.5vw;
     width: 20vw;
+    margin: 0px 1vw;
   }
   .converter__options form .converter__options--size input {
     width: 50px;
