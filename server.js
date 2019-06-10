@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/palette", require("./routes/palette"));
 app.use("/api/gallery", require("./routes/gallery"));
-app.use(express.static(path.join(__dirname, "photosprite", "build")))
+app.use('/static', express.static(path.join(__dirname, 'photosprite/build')));
 
 let allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
 var privateKEY = fs.readFileSync('./private.key', 'utf8');
@@ -55,9 +55,7 @@ var upload = multer({ storage: storage }).single('fileInput');
 async function verify(tokenId) {
     const ticket = await client.verifyIdToken({
         idToken: tokenId,
-        audience: "417105554681-9dhq2bb9o7cfa864nv2nnk75f2jfbtvi.apps.googleusercontent.com",  // Specify the CLIENT_ID of the app that accesses the backend
-        // Or, if multiple clients access the backend:
-        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+        audience: "417105554681-9dhq2bb9o7cfa864nv2nnk75f2jfbtvi.apps.googleusercontent.com",  
     });
     const payload = ticket.getPayload();
     const userid = payload['sub'];
