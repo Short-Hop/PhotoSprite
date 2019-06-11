@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/palette", require("./routes/palette"));
 app.use("/api/gallery", require("./routes/gallery"));
-app.use('/static', express.static(path.join(__dirname, 'photosprite/build')));
+app.use(express.static(path.join(__dirname, "photosprite", "build")))
 
 let allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
 var privateKEY = fs.readFileSync('./private.key', 'utf8');
