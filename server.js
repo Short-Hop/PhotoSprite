@@ -238,10 +238,10 @@ if (port == null || port == "") {
 
 console.log(port)
 
-app.get("*", (req, res) => {
-    console.log(path.join(__dirname + "/photosprite/build/index.html"))
-    res.sendFile(path.join(__dirname + "/photosprite/build/index.html"));
-});
+// app.get("*", (req, res) => {
+//     console.log(path.join(__dirname + "/photosprite/build/index.html"))
+//     res.sendFile(path.join(__dirname + "/photosprite/build/index.html"));
+// });
 
 app.listen(port, () => {
     console.log("Listening. . .")
