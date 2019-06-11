@@ -8,14 +8,20 @@ function TakePhoto(props) {
 
     useEffect(() => {
         let video = document.querySelector("#camera");
-        navigator.mediaDevices.getUserMedia({ video: true })
-        .then(mediaStream => {
-            video.srcObject = mediaStream;
-            let track = mediaStream.getVideoTracks()[0];
-            photo = new ImageCapture(track)
-        }).catch(err => {
-            window.alert("Camera not found")
-        })
+        if (navigator.mediaDevices) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(mediaStream => {
+                    video.srcObject = mediaStream;
+                    let track = mediaStream.getVideoTracks()[0];
+                    photo = new ImageCapture(track)
+                }).catch(err => {
+                    window.alert("Camera not found")
+                })
+        } else {
+            window.alert("Camera not available")
+            props.setuploader("")
+        }
+        
     });
 
     function takePhoto(event) {

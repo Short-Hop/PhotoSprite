@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/palette", require("./routes/palette"));
 app.use("/api/gallery", require("./routes/gallery"));
-app.use(express.static(path.join(__dirname, "photosprite", "build")))
+// app.use(express.static(path.join(__dirname, "photosprite", "build")))
 
 let allUsers = JSON.parse(fs.readFileSync("./users.json", "utf8"));
 var privateKEY = fs.readFileSync('./private.key', 'utf8');
@@ -231,18 +231,19 @@ app.get("/api/gallery/:id/:token", (req, res) => {
     })
 })
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-    port = 8080;
-}
+// let port = process.env.PORT;
+// if (port == null || port == "") {
+//     port = 8080;
+// }
 
-console.log(port)
+// console.log(port)
 
 // app.get("*", (req, res) => {
 //     console.log(path.join(__dirname + "/photosprite/build/index.html"))
 //     res.sendFile(path.join(__dirname + "/photosprite/build/index.html"));
 // });
 
-app.listen(port, () => {
+app.listen(8081, () => {
     console.log("Listening. . .")
 });
+

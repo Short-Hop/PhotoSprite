@@ -37,7 +37,6 @@ function Converter(props) {
         axios.get("http://localhost:8080/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
             setpresets(response.data)
         })
-
     }, [])
 
     const handleForm = (event) => {
@@ -189,12 +188,19 @@ function Converter(props) {
                     ratio: dimensions.ratio
                 }
             }
+        } else {
+            newdimensions = {
+                width: dimensions.width,
+                height: event.target.value,
+                ratio: dimensions.ratio
+            }
         }
         setdimensions(newdimensions);
     }
 
     function useAspectRatio(event) {
         setuseRatio(event.target.checked);
+        console.log(useRatio);
     }
 
     function updatePalette(event) {

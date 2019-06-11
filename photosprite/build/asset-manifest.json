@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "./static/css/main.1185a329.chunk.css",
-    "main.js": "./static/js/main.e586612d.chunk.js",
-    "main.js.map": "./static/js/main.e586612d.chunk.js.map",
+    "main.js": "./static/js/main.bcd96ed0.chunk.js",
+    "main.js.map": "./static/js/main.bcd96ed0.chunk.js.map",
     "runtime~main.js": "./static/js/runtime~main.d653cc00.js",
     "runtime~main.js.map": "./static/js/runtime~main.d653cc00.js.map",
     "static/js/2.dc420bf9.chunk.js": "./static/js/2.dc420bf9.chunk.js",
     "static/js/2.dc420bf9.chunk.js.map": "./static/js/2.dc420bf9.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.b9ff2f6b37b5b4ead288162a27cf4f74.js": "./precache-manifest.b9ff2f6b37b5b4ead288162a27cf4f74.js",
+    "precache-manifest.e2630ea172e8b230fdb05b13ba1180c3.js": "./precache-manifest.e2630ea172e8b230fdb05b13ba1180c3.js",
     "service-worker.js": "./service-worker.js",
     "static/css/main.1185a329.chunk.css.map": "./static/css/main.1185a329.chunk.css.map",
     "static/media/styles.css": "./static/media/PatuaOne-Regular.9f8a6dfc.otf",
