@@ -23,7 +23,7 @@ function Nav(props) {
             setprofilepic(GoogleResponse.profileObj.imageUrl)
         }
 
-        axios.post("http://localhost:8080/api/signin", GoogleResponse).then(response => {
+        axios.post("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/signin", GoogleResponse).then(response => {
 
             if (response.data.googleId === GoogleResponse.googleId) {
 

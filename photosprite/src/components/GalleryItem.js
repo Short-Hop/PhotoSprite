@@ -7,7 +7,7 @@ function GalleryItem(props) {
 
     function deleteItem() {
         if(window.confirm("Are you sure you want to delete this conversion from your gallery?")) {
-            axios.delete("http://localhost:8080/api/gallery/" + props.conversion.name, { headers: { token: localStorage.getItem('token') } }).then(response => {
+            axios.delete("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/gallery/" + props.conversion.name, { headers: { token: localStorage.getItem('token') } }).then(response => {
                 
                 props.setsingleItem("");
                 window.location.reload();
@@ -31,13 +31,13 @@ function GalleryItem(props) {
                 </div>
                 
                 <div className="galleryItem__box--images">
-                    <img alt="original" src={'http://localhost:8080/api/gallery/' + props.conversion.original + '/' + localStorage.getItem('token')}></img>
-                    <img alt="converted" src={'http://localhost:8080/api/gallery/' + props.conversion.converted + '/' + localStorage.getItem('token')}></img>
+                    <img alt="original" src={'http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/gallery/' + props.conversion.original + '/' + localStorage.getItem('token')}></img>
+                    <img alt="converted" src={'http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/gallery/' + props.conversion.converted + '/' + localStorage.getItem('token')}></img>
                 </div>
 
                 <div className="galleryItem__box--download">
-                    <a className="link" href={'http://localhost:8080/api/gallery/' + props.conversion.original + '/' + localStorage.getItem('token')} download>Download</a>
-                    <a className="link" href={'http://localhost:8080/api/gallery/' + props.conversion.converted + '/' + localStorage.getItem('token')} download>Download</a>
+                    <a className="link" href={'http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/gallery/' + props.conversion.original + '/' + localStorage.getItem('token')} download>Download</a>
+                    <a className="link" href={'http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/gallery/' + props.conversion.converted + '/' + localStorage.getItem('token')} download>Download</a>
                 </div>
             </div>
         </div>

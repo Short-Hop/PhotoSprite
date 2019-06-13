@@ -267,7 +267,7 @@ body {
     top: 40px;
   }
   .galleryItem__box {
-    width: 480px;
+    width: 600px;
     padding: 20px 40px 40px 40px;
   }
   .galleryItem__box button {
@@ -286,6 +286,8 @@ body {
   }
   .galleryItem__box--images {
     height: auto;
+  }
+  .galleryItem__box--images img {
     max-height: 50vh;
   }
   .galleryItem__box--download a {

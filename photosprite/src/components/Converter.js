@@ -34,13 +34,13 @@ function Converter(props) {
             console.log("Using remembered palette")
         }
 
-        axios.get("http://localhost:8080/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
+        axios.get("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
             setpresets(response.data)
         })
     }, [])
 
     const handleForm = (event) => {
-        event.preventDefault()
+        event.preventDefault();
 
         let paletteArray = [];
 
@@ -53,6 +53,7 @@ function Converter(props) {
             paletteArray.push(convertHex(form.childNodes[1].childNodes[index].value));
         })
         
+        console.log("colors set to value")
         setcolors(newHexPalette);
         localStorage.setItem("palette", JSON.stringify(newHexPalette));
 
@@ -67,11 +68,11 @@ function Converter(props) {
         }
 
         if(originalImage !== "") {
-            axios.post("http://localhost:8080/api/convertImage", data).then(response => {
+            axios.post("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/convertImage", data).then(response => {
 
                 if (response.data) {
-                    let newImage = <img className="newImage" src={"http://localhost:8080/api/uploads/" + response.data[1] + "?" + new Date().getTime()} alt="converted"></img>;
-                    let original = <img className="originalImage" src={"http://localhost:8080/api/uploads/" + response.data[0] + "?" + new Date().getTime()} alt="original"></img>;
+                    let newImage = <img className="newImage" src={"http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/uploads/" + response.data[1] + "?" + new Date().getTime()} alt="converted"></img>;
+                    let original = <img className="originalImage" src={"http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/uploads/" + response.data[0] + "?" + new Date().getTime()} alt="original"></img>;
 
                     setimage(newImage);
                     sethexpalette(newHexPalette)
@@ -111,12 +112,8 @@ function Converter(props) {
 
         if (localStorage.getItem('token')) {
 
-            let form = document.getElementById("converterForm");
-            let paletteArray = [];
-
-            colors.forEach((item, index) => {
-                paletteArray.push(form.childNodes[1].childNodes[index].value);
-            })
+            let paletteArray = hexpalette.split(" ");
+            console.log(paletteArray)
 
             let savedata = {
                 tempID: localStorage.getItem("tempID"),
@@ -124,7 +121,7 @@ function Converter(props) {
                 palette: paletteArray
             }
 
-            axios.post("http://localhost:8080/api/gallery", savedata, { headers: { token: localStorage.getItem('token') } }).then(response => {
+            axios.post("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/gallery", savedata, { headers: { token: localStorage.getItem('token') } }).then(response => {
                 window.alert(response.data);
             })
 
@@ -219,6 +216,8 @@ function Converter(props) {
     function loadpalette(event) {
         if(event.target.value) {
             setcolors(JSON.parse(event.target.value));
+            console.log("colors set to preset")
+            
         } else {
             setcolors(["#000000"]);
         }
@@ -229,7 +228,7 @@ function Converter(props) {
             setdeleteButton(<button className="delete" onClick={deletePalette}>delete</button>)
         } else {
             setdeleteButton("")
-        }
+        }        
     }
 
     function savePalette() {
@@ -240,10 +239,10 @@ function Converter(props) {
                     name: name,
                     palette: colors
                 }
-                axios.post("http://localhost:8080/api/palette", data, { headers: { token: localStorage.getItem('token') } }).then(response => {
+                axios.post("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/palette", data, { headers: { token: localStorage.getItem('token') } }).then(response => {
                     window.alert(response.data)
 
-                    axios.get("http://localhost:8080/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
+                    axios.get("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
                         setpresets(response.data)
                     })
                 })
@@ -258,9 +257,9 @@ function Converter(props) {
         
         if (window.confirm("Are you sure you want to delete this palette?")) {
 
-            axios.delete("http://localhost:8080/api/palette/" + presets[selector.selectedIndex - 1].name, { headers: { token: localStorage.getItem('token') } }).then(response => {
+            axios.delete("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/palette/" + presets[selector.selectedIndex - 1].name, { headers: { token: localStorage.getItem('token') } }).then(response => {
 
-                axios.get("http://localhost:8080/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
+                axios.get("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/palette", { headers: { token: localStorage.getItem('token') } }).then(response => {
                     setpresets(response.data)
                 })
             })

@@ -22,9 +22,9 @@ function Uploader(props) {
             tempID: localStorage.getItem("tempID")
         }
 
-        axios.post("http://localhost:8080/api/tempID", idData).then(respones => {
-            axios.post("http://localhost:8080/api/upload", data).then(response => {
-                let uploadedImage = <img className="originalImage" src={"http://localhost:8080/api/uploads/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
+        axios.post("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/tempID", idData).then(respones => {
+            axios.post("http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/upload", data).then(response => {
+                let uploadedImage = <img className="originalImage" src={"http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/uploads/" + response.data + "?" + new Date().getTime()} alt="Invalid URL"></img>
 
 
                 let img = new Image();
@@ -39,7 +39,7 @@ function Uploader(props) {
 
                     props.setdimensions(newDimensions);
                 }
-                img.src = "http://localhost:8080/api/uploads/" + response.data + "?" + new Date().getTime();
+                img.src = "http://photospriteback-env.yufd8zphzk.us-east-2.elasticbeanstalk.com/api/uploads/" + response.data + "?" + new Date().getTime();
                 setform("")
                 setimage(uploadedImage);
                 props.setoriginalImage(uploadedImage);

@@ -110,9 +110,9 @@
     .galleryItem {
         top: 40px;
 
-
         &__box {
-            width: 480px;
+            
+            width: 600px;
             padding: 20px 40px 40px 40px;
 
             button {
@@ -138,10 +138,10 @@
 
             &--images {
                 height: auto;
-                max-height: 50vh;
+                
                 
                 img {
-                    
+                    max-height: 50vh;
                 }
             }
 
